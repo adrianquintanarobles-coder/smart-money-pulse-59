@@ -183,13 +183,32 @@ function LiveStats() {
     { value: <Counter to={2.1} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
   ];
   return (
-    <section className="py-20 sm:py-28 relative">
+    <section className="py-20 sm:py-28 relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 mesh-cta opacity-15" />
       <div className="absolute inset-0 -z-10 dot-grid opacity-25" />
       <div className="container mx-auto px-5 sm:px-8">
-        <SectionHeading eyebrow="Live data" title="The numbers speak." />
+        <SectionHeading
+          eyebrow="Live data"
+          title="The numbers speak."
+          eyebrowAccessory={
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 text-neon font-display text-[10px] uppercase tracking-widest px-2 py-0.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-neon opacity-75 animate-ping" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-neon" />
+              </span>
+              Updated live
+            </span>
+          }
+        />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-5xl mx-auto">
           {stats.map((s, i) => (
-            <div key={i} className="frosted rounded-2xl p-5 sm:p-7 text-center">
+            <div key={i} className="frosted rounded-2xl p-5 sm:p-7 text-center overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-neon/15 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-transparent via-neon to-transparent stat-bar-shimmer"
+                  style={{ animationDelay: `${i * 0.4}s` }}
+                />
+              </div>
               <div className="font-display text-3xl sm:text-5xl font-bold text-gradient-cta tabular-nums">
                 {s.value}
               </div>
