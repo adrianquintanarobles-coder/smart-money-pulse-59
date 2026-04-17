@@ -106,7 +106,7 @@ function Features() {
   };
 
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-16 sm:py-20">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Architecture" title="Four layers of intelligence. Zero noise." />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto">
@@ -160,7 +160,7 @@ function DashboardPreview() {
     { icon: LinkIcon, label: "Direct Polymarket link", cls: "border-electric/30 bg-electric/5 text-electric" },
   ];
   return (
-    <section className="py-20 sm:py-28 relative">
+    <section className="py-16 sm:py-20 relative">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Delivery" title="Intelligence delivered to your pocket." />
         <PhoneMockup />
@@ -185,7 +185,7 @@ function LiveStats() {
     { value: <Counter to={2.1} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
   ];
   return (
-    <section className="py-20 sm:py-28 relative overflow-hidden">
+    <section className="py-16 sm:py-20 relative overflow-hidden">
       <div className="absolute inset-0 -z-10 mesh-cta opacity-15" />
       <div className="absolute inset-0 -z-10 dot-grid opacity-25" />
       <div className="container mx-auto px-5 sm:px-8">
@@ -246,7 +246,7 @@ function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-20 sm:py-28">
+    <section id="pricing" className="py-16 sm:py-20">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Pricing" title="Free to start. VIP when you're ready." />
         <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
@@ -333,7 +333,7 @@ function Transparency() {
     },
   ];
   return (
-    <section className="py-20 sm:py-24">
+    <section className="py-16 sm:py-20">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Transparency" title="We show you the wins and the losses." />
         <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
