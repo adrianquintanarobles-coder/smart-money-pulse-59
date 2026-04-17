@@ -3,6 +3,7 @@ import { LiveBadge } from "@/components/LiveBadge";
 import { PhoneMockup } from "@/components/PhoneMockup";
 import { Counter } from "@/components/Counter";
 import { SectionHeading } from "@/components/SectionHeading";
+import { Navbar } from "@/components/Navbar";
 import { Filter, Brain, ShieldCheck, Gauge, Check, X, Zap, Link as LinkIcon, Target } from "lucide-react";
 
 const TG = "https://t.me/+BYejWJEm0SI4MmE0";
