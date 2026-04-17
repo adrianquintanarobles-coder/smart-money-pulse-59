@@ -10,7 +10,7 @@ interface Props {
 
 export function SectionHeading({ eyebrow, eyebrowAccessory, title, subtitle, align = "center" }: Props) {
   return (
-    <div className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""} mb-10 md:mb-14`}>
+    <div className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""} mb-8 md:mb-10`}>
       {eyebrow && (
         <div className={`flex items-center gap-3 mb-3 ${align === "center" ? "justify-center" : ""}`}>
           <span className="font-display text-xs uppercase tracking-[0.2em] text-neon">{eyebrow}</span>
