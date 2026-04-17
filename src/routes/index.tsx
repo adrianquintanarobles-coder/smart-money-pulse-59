@@ -91,10 +91,9 @@ function Hero() {
 
 /* ── FEATURES ─────────────────────────────────────────── */
 function Features() {
-  const features = [
+  const topFeatures = [
     { icon: Filter, tone: "neon", title: "ROI Filtering", body: "Every wallet scored by PnL / Capital at Risk across 5+ trades. No history = no signal." },
     { icon: Brain, tone: "electric", title: "AI Analysis", body: "Each VIP signal includes a 3-line institutional reasoning report with breaking news context. Powered by Claude AI." },
-    { icon: ShieldCheck, tone: "neon", title: "Auto-Resolution Audit", body: "The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution. Run /resultados for the full record." },
     { icon: Gauge, tone: "amber", title: "Confidence Score 0–100", body: "Proprietary algorithm rates each signal by wallet history, liquidity, position size and news." },
   ] as const;
 
@@ -108,8 +107,8 @@ function Features() {
     <section className="py-20 sm:py-28">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Architecture" title="Four layers of intelligence. Zero noise." />
-        <div className="grid md:grid-cols-2 gap-4 sm:gap-5 max-w-5xl mx-auto">
-          {features.map(({ icon: Icon, tone, title, body }) => {
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto">
+          {topFeatures.map(({ icon: Icon, tone, title, body }) => {
             const t = toneStyles[tone];
             return (
               <div key={title} className="group relative rounded-2xl border border-border bg-card p-6 sm:p-7 hover:border-foreground/20 transition overflow-hidden">
@@ -122,6 +121,29 @@ function Features() {
               </div>
             );
           })}
+        </div>
+
+        {/* Featured: Auto-Resolution Audit */}
+        <div className="mt-4 sm:mt-5 max-w-5xl mx-auto">
+          <div className="group relative rounded-2xl border border-border border-l-0 bg-[color-mix(in_oklab,var(--card)_85%,var(--neon)_8%)] p-6 sm:p-8 overflow-hidden">
+            <span aria-hidden className="absolute left-0 top-0 bottom-0 w-1 bg-neon shadow-[0_0_18px_0_color-mix(in_oklab,var(--neon)_70%,transparent)]" />
+            <div className="absolute inset-0 -z-10 rounded-2xl opacity-60 bg-gradient-to-br from-neon/10 via-transparent to-transparent" />
+
+            <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-amber-score/40 bg-amber-score/10 text-amber-score font-display text-[10px] uppercase tracking-widest px-2.5 py-1">
+              ★ Unique to us
+            </span>
+
+            <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border bg-neon/10 border-neon/30 text-neon mb-4">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <h3 className="font-display text-xl sm:text-2xl font-semibold mb-2 pr-28 sm:pr-0">
+              Auto-Resolution Audit
+            </h3>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl">
+              The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution.
+              Run <span className="font-display text-foreground">/resultados</span> for the full record.
+            </p>
+          </div>
         </div>
       </div>
     </section>
