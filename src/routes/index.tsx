@@ -84,49 +84,36 @@ function Hero() {
 /* ── FEATURES ─────────────────────────────────────────── */
 function Features() {
   const features = [
-    { icon: Filter, color: "neon", title: "ROI Filtering", body: "Every wallet scored by PnL / Capital at Risk across 5+ trades. No history = no signal." },
-    { icon: Brain, color: "electric", title: "AI Analysis", body: "Each VIP signal includes a 3-line institutional reasoning report with breaking news context. Powered by Claude AI." },
-    { icon: ShieldCheck, color: "neon", title: "Auto-Resolution Audit", body: "The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution. Run /resultados for the full record." },
-    { icon: Gauge, color: "amber-score", title: "Confidence Score 0–100", body: "Proprietary algorithm rates each signal by wallet history, liquidity, position size and news." },
-  ];
+    { icon: Filter, tone: "neon", title: "ROI Filtering", body: "Every wallet scored by PnL / Capital at Risk across 5+ trades. No history = no signal." },
+    { icon: Brain, tone: "electric", title: "AI Analysis", body: "Each VIP signal includes a 3-line institutional reasoning report with breaking news context. Powered by Claude AI." },
+    { icon: ShieldCheck, tone: "neon", title: "Auto-Resolution Audit", body: "The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution. Run /resultados for the full record." },
+    { icon: Gauge, tone: "amber", title: "Confidence Score 0–100", body: "Proprietary algorithm rates each signal by wallet history, liquidity, position size and news." },
+  ] as const;
+
+  const toneStyles: Record<string, { box: string; ring: string; text: string; glow: string }> = {
+    neon:     { box: "bg-neon/10",        ring: "border-neon/30",        text: "text-neon",        glow: "from-neon/10" },
+    electric: { box: "bg-electric/10",    ring: "border-electric/30",    text: "text-electric",    glow: "from-electric/10" },
+    amber:    { box: "bg-amber-score/10", ring: "border-amber-score/30", text: "text-amber-score", glow: "from-amber-score/10" },
+  };
+
   return (
     <section className="py-20 sm:py-28">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Architecture" title="Four layers of intelligence. Zero noise." />
         <div className="grid md:grid-cols-2 gap-4 sm:gap-5 max-w-5xl mx-auto">
-          {features.map(({ icon: Icon, color, title, body }) => (
-            <div key={title} className="group relative rounded-2xl border border-border bg-card p-6 sm:p-7 hover:border-foreground/20 transition">
-              <div className={`absolute inset-0 -z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition bg-gradient-to-br from-${color}/10 to-transparent`} />
-              <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl bg-${color}/10 border border-${color}/30 text-${color} mb-4`}>
-                <Icon className="h-5 w-5" />
+          {features.map(({ icon: Icon, tone, title, body }) => {
+            const t = toneStyles[tone];
+            return (
+              <div key={title} className="group relative rounded-2xl border border-border bg-card p-6 sm:p-7 hover:border-foreground/20 transition overflow-hidden">
+                <div className={`absolute inset-0 -z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition bg-gradient-to-br ${t.glow} to-transparent`} />
+                <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border ${t.box} ${t.ring} ${t.text} mb-4`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="font-display text-lg sm:text-xl font-semibold mb-2">{title}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{body}</p>
               </div>
-              <h3 className="font-display text-lg sm:text-xl font-semibold mb-2">{title}</h3>
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{body}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── DASHBOARD PREVIEW ───────────────────────────────── */
-function DashboardPreview() {
-  return (
-    <section className="py-20 sm:py-28 relative">
-      <div className="container mx-auto px-5 sm:px-8">
-        <SectionHeading eyebrow="Delivery" title="Intelligence delivered to your pocket." />
-        <PhoneMockup />
-        <div className="mt-10 flex flex-wrap justify-center gap-2 sm:gap-3">
-          {[
-            { icon: Zap, label: "< 5 sec latency", color: "neon" },
-            { icon: Target, label: "87 avg confidence", color: "amber-score" },
-            { icon: LinkIcon, label: "Direct Polymarket link", color: "electric" },
-          ].map(({ icon: Icon, label, color }) => (
-            <span key={label} className={`inline-flex items-center gap-2 rounded-full border border-${color}/30 bg-${color}/5 text-${color} px-4 py-1.5 text-xs sm:text-sm font-display`}>
-              <Icon className="h-3.5 w-3.5" /> {label}
-            </span>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
