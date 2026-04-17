@@ -120,6 +120,30 @@ function Features() {
   );
 }
 
+/* ── DASHBOARD PREVIEW ───────────────────────────────── */
+function DashboardPreview() {
+  const pills = [
+    { icon: Zap, label: "< 5 sec latency", cls: "border-neon/30 bg-neon/5 text-neon" },
+    { icon: Target, label: "87 avg confidence", cls: "border-amber-score/30 bg-amber-score/5 text-amber-score" },
+    { icon: LinkIcon, label: "Direct Polymarket link", cls: "border-electric/30 bg-electric/5 text-electric" },
+  ];
+  return (
+    <section className="py-20 sm:py-28 relative">
+      <div className="container mx-auto px-5 sm:px-8">
+        <SectionHeading eyebrow="Delivery" title="Intelligence delivered to your pocket." />
+        <PhoneMockup />
+        <div className="mt-10 flex flex-wrap justify-center gap-2 sm:gap-3">
+          {pills.map(({ icon: Icon, label, cls }) => (
+            <span key={label} className={`inline-flex items-center gap-2 rounded-full border ${cls} px-4 py-1.5 text-xs sm:text-sm font-display`}>
+              <Icon className="h-3.5 w-3.5" /> {label}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── LIVE STATS ──────────────────────────────────────── */
 function LiveStats() {
   const stats = [
