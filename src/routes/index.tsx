@@ -5,6 +5,7 @@ import { Counter } from "@/components/Counter";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Navbar } from "@/components/Navbar";
 import { SignalTicker } from "@/components/SignalTicker";
+import { FAQ } from "@/components/FAQ";
 import { Filter, Brain, ShieldCheck, Gauge, Check, X, Zap, Link as LinkIcon, Target } from "lucide-react";
 
 const TG = "https://t.me/+BYejWJEm0SI4MmE0";
@@ -32,6 +33,7 @@ function Index() {
       <LiveStats />
       <Pricing />
       <Transparency />
+      <FAQ />
       <FinalCTA />
       <Footer />
     </main>
