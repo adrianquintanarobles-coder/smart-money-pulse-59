@@ -4,6 +4,7 @@ import { PhoneMockup } from "@/components/PhoneMockup";
 import { Counter } from "@/components/Counter";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Navbar } from "@/components/Navbar";
+import { SignalTicker } from "@/components/SignalTicker";
 import { Filter, Brain, ShieldCheck, Gauge, Check, X, Zap, Link as LinkIcon, Target } from "lucide-react";
 
 const TG = "https://t.me/+BYejWJEm0SI4MmE0";
@@ -78,6 +79,10 @@ function Hero() {
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Powered by Claude AI</span>
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Filters verified wallets only</span>
           </div>
+        </div>
+
+        <div className="mt-14 sm:mt-16 -mx-5 sm:-mx-8">
+          <SignalTicker />
         </div>
       </div>
     </section>
