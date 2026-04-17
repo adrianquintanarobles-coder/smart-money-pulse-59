@@ -305,38 +305,103 @@ function Pricing() {
 /* ── TRANSPARENCY ────────────────────────────────────── */
 function Transparency() {
   const items = [
-    { win: true, market: "Trump wins 2024?", confidence: 91, roi: "+186%" },
-    { win: true, market: "Fed cuts Dec 2024?", confidence: 76, roi: "+43%" },
-    { win: false, market: "ETH flips BTC Q1?", confidence: 58, roi: "-100%" },
+    {
+      win: true,
+      date: "Nov 3, 2024",
+      market: "Trump wins 2024?",
+      desc: "US Presidential Election outcome — resolved on official AP call.",
+      confidence: 91,
+      roi: "+186%",
+    },
+    {
+      win: true,
+      date: "Nov 28, 2024",
+      market: "Fed cuts Dec 2024?",
+      desc: "FOMC December meeting rate decision — 25bps cut confirmed.",
+      confidence: 76,
+      roi: "+43%",
+    },
+    {
+      win: false,
+      date: "Jan 12, 2025",
+      market: "ETH flips BTC Q1?",
+      desc: "Ethereum market cap surpassing Bitcoin before April 1.",
+      confidence: 58,
+      roi: "-100%",
+    },
   ];
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-20 sm:py-24">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Transparency" title="We show you the wins and the losses." />
         <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
           {items.map((it) => (
-            <div key={it.market} className={`rounded-2xl border p-5 sm:p-6 bg-card ${it.win ? "border-neon/30" : "border-loss/30"}`}>
+            <div
+              key={it.market}
+              className={`rounded-2xl border p-5 sm:p-6 bg-card flex flex-col ${
+                it.win ? "border-neon/30" : "border-loss/30"
+              }`}
+            >
               <div className="flex items-center justify-between mb-3">
-                <span className={`font-display text-xs px-2 py-1 rounded-full ${it.win ? "bg-neon/15 text-neon border border-neon/30" : "bg-loss/15 text-loss border border-loss/30"}`}>
+                <span
+                  className={`font-display text-xs px-2 py-1 rounded-full ${
+                    it.win
+                      ? "bg-neon/15 text-neon border border-neon/30"
+                      : "bg-loss/15 text-loss border border-loss/30"
+                  }`}
+                >
                   {it.win ? "✅ WIN" : "❌ LOSS"}
                 </span>
-                <span className="font-display text-xs text-amber-score">{it.confidence}/100</span>
+                <span className="font-display text-[11px] text-muted-foreground">{it.date}</span>
               </div>
-              <div className="text-foreground font-display mb-3 text-sm sm:text-base">{it.market}</div>
-              <div className={`font-display text-2xl sm:text-3xl font-bold ${it.win ? "text-neon" : "text-loss"}`}>
-                {it.roi}
+
+              <div className="text-foreground font-display mb-1.5 text-sm sm:text-base">
+                {it.market}
               </div>
-              <div className="text-xs text-muted-foreground mt-1">ROI</div>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-4">{it.desc}</p>
+
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-display text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Confidence
+                  </span>
+                  <span className="font-display text-xs text-amber-score">{it.confidence}/100</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-muted/60 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full ${
+                      it.confidence >= 80
+                        ? "bg-neon"
+                        : it.confidence >= 70
+                          ? "bg-amber-score"
+                          : "bg-loss"
+                    }`}
+                    style={{ width: `${it.confidence}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-auto pt-3 border-t border-border/60">
+                <div
+                  className={`font-display text-2xl sm:text-3xl font-bold ${
+                    it.win ? "text-neon" : "text-loss"
+                  }`}
+                >
+                  {it.roi}
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5">ROI</div>
+              </div>
             </div>
           ))}
         </div>
-        <p className="text-center text-sm text-muted-foreground italic mt-8 max-w-2xl mx-auto">
+        <p className="text-center text-sm text-muted-foreground italic mt-6 max-w-2xl mx-auto">
           Low-confidence signals sometimes lose. That's why the Confidence Score exists.
         </p>
       </div>
     </section>
   );
 }
+
 
 /* ── FINAL CTA ───────────────────────────────────────── */
 function FinalCTA() {
