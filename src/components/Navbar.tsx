@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 const TG = "https://t.me/+BYejWJEm0SI4MmE0";
 
-export function Navbar() {
+export function Navbar({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
 
@@ -49,14 +49,12 @@ export function Navbar() {
             >
               Free Channel
             </a>
-            <a
-              href={TG}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-display text-xs sm:text-sm font-semibold rounded-lg bg-neon text-background px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-neon/90 transition shadow-[0_0_20px_-4px_color-mix(in_oklab,var(--neon)_60%,transparent)]"
-            >
-              VIP Access
-            </a>
+            <button
+  onClick={onUpgradeClick}
+  className="font-display text-xs sm:text-sm font-semibold rounded-lg bg-neon text-background px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-neon/90 transition shadow-[0_0_20px_-4px_color-mix(in_oklab,var(--neon)_60%,transparent)]"
+>
+  VIP Access
+</button>
           </div>
         </nav>
       </div>
