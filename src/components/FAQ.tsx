@@ -4,24 +4,28 @@ import { SectionHeading } from "@/components/SectionHeading";
 
 const faqs = [
   {
-    q: "¿Es realmente gratis el canal básico?",
-    a: "Sí, el canal Free es 100% gratuito y permanente. Recibirás señales de $50 a $500 con enlaces directos a Polymarket sin ningún coste.",
+    q: "Is the free channel really free?",
+    a: "Yes, the Free channel is 100% free and permanent. You'll receive signals from $50 to $500 with direct Polymarket links at no cost, forever.",
   },
   {
-    q: "¿Cómo sé que las señales son reales y no inventadas?",
-    a: "Nuestro sistema de Auto-Resolución consulta la API de Polymarket cuando cada mercado se cierra y marca automáticamente cada señal como WIN o LOSS. Usa el comando /resultados en el bot para ver el historial completo.",
+    q: "How do I know the signals are real and not made up?",
+    a: "Our Auto-Resolution system queries the Polymarket API every time a market closes and automatically marks each signal as WIN or LOSS. Use the /resultados command in the bot to see the full verified track record.",
   },
   {
-    q: "¿Qué es el Confidence Score?",
-    a: "Es un algoritmo propio (0-100) que puntúa la fiabilidad de cada señal en base al historial del wallet, liquidez del mercado, tamaño de la posición y contexto de noticias. Señales por encima de 75 tienen históricamente mayor tasa de acierto.",
+    q: "What is the Confidence Score?",
+    a: "It's a proprietary algorithm (0–100) that rates each signal's reliability based on the wallet's trade history, market liquidity, position size, and news context. Signals above 75 have historically shown a higher win rate.",
   },
   {
-    q: "¿Puedo cancelar el VIP cuando quiera?",
-    a: "Sí, sin permanencia ni penalización. Cancelas desde Telegram en cualquier momento.",
+    q: "Can I cancel VIP at any time?",
+    a: "Yes, no commitment or penalty. You can cancel directly from Telegram at any time.",
   },
   {
-    q: "¿Con qué frecuencia llegan señales?",
-    a: "El bot escanea Polymarket cada 5 segundos. En días de alta actividad de mercado recibirás entre 5 y 15 señales VIP. En días tranquilos, entre 1 y 3.",
+    q: "How often do signals arrive?",
+    a: "The bot scans Polymarket every 5 seconds. On high-activity days you'll receive between 5 and 15 VIP signals. On quieter days, between 1 and 3.",
+  },
+  {
+    q: "How does the VIP payment work?",
+    a: "After payment you'll receive a unique one-time invite link to join the private VIP channel. The link expires after one use and is tied to your payment confirmation.",
   },
 ];
 
@@ -29,7 +33,7 @@ export function FAQ() {
   return (
     <section className="py-16 sm:py-20">
       <div className="container mx-auto px-5 sm:px-8">
-        <SectionHeading eyebrow="FAQ" title="Preguntas frecuentes" />
+        <SectionHeading eyebrow="FAQ" title="Frequently asked questions" />
 
         <AccordionPrimitive.Root
           type="single"
