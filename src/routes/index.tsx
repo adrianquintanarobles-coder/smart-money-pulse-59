@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { LiveBadge } from "@/components/LiveBadge";
 import { PhoneMockup } from "@/components/PhoneMockup";
 import { Counter } from "@/components/Counter";
@@ -6,9 +7,10 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { Navbar } from "@/components/Navbar";
 import { SignalTicker } from "@/components/SignalTicker";
 import { FAQ } from "@/components/FAQ";
+import { CheckoutModal } from "@/components/CheckoutModal";
 import { Filter, Brain, ShieldCheck, Gauge, Check, X, Zap, Link as LinkIcon, Target } from "lucide-react";
 
-const TG = "https://t.me/+BYejWJEm0SI4MmE0";
+export const TG_FREE = "https://t.me/+BYejWJEm0SI4MmE0";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -23,66 +25,58 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Navbar />
+      <Navbar onUpgradeClick={() => setCheckoutOpen(true)} />
       <div id="top" />
-      <Hero />
+      <Hero onUpgradeClick={() => setCheckoutOpen(true)} />
       <Features />
       <DashboardPreview />
       <LiveStats />
-      <Pricing />
+      <Pricing onUpgradeClick={() => setCheckoutOpen(true)} />
       <Transparency />
       <FAQ />
-      <FinalCTA />
+      <FinalCTA onUpgradeClick={() => setCheckoutOpen(true)} />
       <Footer />
+      <CheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </main>
   );
 }
 
 /* ── HERO ─────────────────────────────────────────────── */
-function Hero() {
+function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 dot-grid opacity-30" />
       <div className="absolute inset-x-0 top-0 -z-10 h-[600px] bg-[radial-gradient(ellipse_70%_60%_at_50%_0%,color-mix(in_oklab,var(--neon)_18%,transparent),transparent_70%)]" />
-
       <div className="container mx-auto px-5 sm:px-8 pt-20 sm:pt-28 pb-20 sm:pb-32">
         <div className="max-w-4xl mx-auto text-center stagger">
           <div className="flex justify-center"><LiveBadge /></div>
-
           <h1 className="mt-6 font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05]">
             Stop Guessing.<br />
             <span className="text-gradient-cta">Follow the Whales.</span>
           </h1>
-
           <p className="mt-5 text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
             Real-time Smart Money alerts filtered by verified ROI, win streaks &amp; AI analysis.
           </p>
-
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-            <a
-              href={TG}
-              target="_blank" rel="noopener noreferrer"
-              className="btn-neon-border inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-display text-sm sm:text-base font-semibold w-full sm:w-auto"
-            >
+            <a href={TG_FREE} target="_blank" rel="noopener noreferrer"
+              className="btn-neon-border inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-display text-sm sm:text-base font-semibold w-full sm:w-auto">
               Join Free on Telegram <span aria-hidden>→</span>
             </a>
-            <a
-              href="#pricing"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto"
-            >
+            <button onClick={onUpgradeClick}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto">
               See VIP Features <span aria-hidden>↓</span>
-            </a>
+            </button>
           </div>
-
           <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs sm:text-sm text-muted-foreground">
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Track record auto-audited</span>
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Powered by Claude AI</span>
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Filters verified wallets only</span>
           </div>
         </div>
-
         <div className="mt-14 sm:mt-16 -mx-5 sm:-mx-8">
           <SignalTicker />
         </div>
@@ -124,23 +118,17 @@ function Features() {
             );
           })}
         </div>
-
-        {/* Featured: Auto-Resolution Audit */}
         <div className="mt-4 sm:mt-5 max-w-5xl mx-auto">
           <div className="group relative rounded-2xl border border-border border-l-0 bg-[color-mix(in_oklab,var(--card)_85%,var(--neon)_8%)] p-6 sm:p-8 overflow-hidden">
             <span aria-hidden className="absolute left-0 top-0 bottom-0 w-1 bg-neon shadow-[0_0_18px_0_color-mix(in_oklab,var(--neon)_70%,transparent)]" />
             <div className="absolute inset-0 -z-10 rounded-2xl opacity-60 bg-gradient-to-br from-neon/10 via-transparent to-transparent" />
-
             <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-amber-score/40 bg-amber-score/10 text-amber-score font-display text-[10px] uppercase tracking-widest px-2.5 py-1">
               ★ Unique to us
             </span>
-
             <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border bg-neon/10 border-neon/30 text-neon mb-4">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <h3 className="font-display text-xl sm:text-2xl font-semibold mb-2 pr-28 sm:pr-0">
-              Auto-Resolution Audit
-            </h3>
+            <h3 className="font-display text-xl sm:text-2xl font-semibold mb-2 pr-28 sm:pr-0">Auto-Resolution Audit</h3>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl">
               The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution.
               Run <span className="font-display text-foreground">/resultados</span> for the full record.
@@ -206,14 +194,10 @@ function LiveStats() {
           {stats.map((s, i) => (
             <div key={i} className="frosted rounded-2xl p-5 sm:p-7 text-center overflow-hidden relative">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-neon/15 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-transparent via-neon to-transparent stat-bar-shimmer"
-                  style={{ animationDelay: `${i * 0.4}s` }}
-                />
+                <div className="h-full bg-gradient-to-r from-transparent via-neon to-transparent stat-bar-shimmer"
+                  style={{ animationDelay: `${i * 0.4}s` }} />
               </div>
-              <div className="font-display text-3xl sm:text-5xl font-bold text-gradient-cta tabular-nums">
-                {s.value}
-              </div>
+              <div className="font-display text-3xl sm:text-5xl font-bold text-gradient-cta tabular-nums">{s.value}</div>
               <div className="mt-2 text-xs sm:text-sm text-muted-foreground">{s.label}</div>
             </div>
           ))}
@@ -227,13 +211,8 @@ function LiveStats() {
 }
 
 /* ── PRICING ─────────────────────────────────────────── */
-function Pricing() {
-  const free = [
-    "Signals $50–$500",
-    "Polymarket links",
-    "Wallet data",
-    "Community",
-  ];
+function Pricing({ onUpgradeClick }: { onUpgradeClick: () => void }) {
+  const free = ["Signals $50–$500", "Polymarket links", "Wallet data", "Community"];
   const freeOut = ["Whale signals", "Confidence Score", "AI Analysis", "News context"];
   const vip = [
     "Everything in Free",
@@ -250,6 +229,7 @@ function Pricing() {
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Pricing" title="Free to start. VIP when you're ready." />
         <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+
           {/* FREE */}
           <div className="frosted rounded-2xl p-6 sm:p-8 flex flex-col">
             <div className="flex items-center justify-between mb-4">
@@ -259,39 +239,49 @@ function Pricing() {
               <span className="font-display text-5xl font-bold">$0</span>
               <span className="text-muted-foreground text-sm">forever</span>
             </div>
-            <a href={TG} target="_blank" rel="noopener noreferrer"
+            <a href={TG_FREE} target="_blank" rel="noopener noreferrer"
               className="block text-center rounded-xl bg-neon text-background font-display font-semibold py-3 hover:bg-neon/90 transition mb-6">
               Join Telegram Channel →
             </a>
             <ul className="space-y-2.5 text-sm">
               {free.map((f) => (
-                <li key={f} className="flex items-start gap-2.5"><Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span></li>
+                <li key={f} className="flex items-start gap-2.5">
+                  <Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span>
+                </li>
               ))}
               {freeOut.map((f) => (
-                <li key={f} className="flex items-start gap-2.5 text-muted-foreground/70"><X className="h-4 w-4 text-loss mt-0.5 shrink-0" /><span className="line-through">{f}</span></li>
+                <li key={f} className="flex items-start gap-2.5 text-muted-foreground/70">
+                  <X className="h-4 w-4 text-loss mt-0.5 shrink-0" /><span className="line-through">{f}</span>
+                </li>
               ))}
             </ul>
           </div>
 
           {/* VIP */}
           <div className="relative rounded-2xl p-6 sm:p-8 flex flex-col bg-card glow-neon">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon text-background font-display text-[10px] uppercase tracking-widest px-3 py-1 rounded-full">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon text-background font-display text-[10px] uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">
               ★ Recommended
             </div>
             <div className="flex items-center justify-between mb-4">
               <span className="font-display text-xs uppercase tracking-widest text-neon border border-neon/40 bg-neon/10 rounded-full px-2.5 py-1">VIP</span>
             </div>
-            <div className="flex items-baseline gap-2 mb-6">
-              <span className="font-display text-3xl sm:text-4xl font-bold">Early Access</span>
+            <div className="mb-1">
+              <span className="font-display text-sm text-muted-foreground line-through">$59/mo</span>
             </div>
-            <p className="text-xs text-muted-foreground -mt-4 mb-6">Special launch pricing</p>
-            <a href={TG} target="_blank" rel="noopener noreferrer"
+            <div className="flex items-baseline gap-2 mb-1">
+              <span className="font-display text-5xl font-bold text-gradient-cta">$15</span>
+              <span className="text-muted-foreground text-sm">/mo</span>
+            </div>
+            <p className="text-xs text-amber-score mb-6">🔥 Launch price — limited spots</p>
+            <button onClick={onUpgradeClick}
               className="btn-gradient-cta block text-center rounded-xl font-display font-semibold py-3 hover:opacity-95 transition mb-6">
               Upgrade to VIP →
-            </a>
+            </button>
             <ul className="space-y-2.5 text-sm">
               {vip.map((f) => (
-                <li key={f} className="flex items-start gap-2.5"><Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span></li>
+                <li key={f} className="flex items-start gap-2.5">
+                  <Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span>
+                </li>
               ))}
             </ul>
           </div>
@@ -307,90 +297,38 @@ function Pricing() {
 /* ── TRANSPARENCY ────────────────────────────────────── */
 function Transparency() {
   const items = [
-    {
-      win: true,
-      date: "Nov 3, 2024",
-      market: "Trump wins 2024?",
-      desc: "US Presidential Election outcome — resolved on official AP call.",
-      confidence: 91,
-      roi: "+186%",
-    },
-    {
-      win: true,
-      date: "Nov 28, 2024",
-      market: "Fed cuts Dec 2024?",
-      desc: "FOMC December meeting rate decision — 25bps cut confirmed.",
-      confidence: 76,
-      roi: "+43%",
-    },
-    {
-      win: false,
-      date: "Jan 12, 2025",
-      market: "ETH flips BTC Q1?",
-      desc: "Ethereum market cap surpassing Bitcoin before April 1.",
-      confidence: 58,
-      roi: "-100%",
-    },
+    { win: true, date: "Nov 3, 2024", market: "Trump wins 2024?", desc: "US Presidential Election outcome — resolved on official AP call.", confidence: 91, roi: "+186%" },
+    { win: true, date: "Nov 28, 2024", market: "Fed cuts Dec 2024?", desc: "FOMC December meeting rate decision — 25bps cut confirmed.", confidence: 76, roi: "+43%" },
+    { win: false, date: "Jan 12, 2025", market: "ETH flips BTC Q1?", desc: "Ethereum market cap surpassing Bitcoin before April 1.", confidence: 58, roi: "-100%" },
   ];
+
   return (
     <section className="py-16 sm:py-20">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Transparency" title="We show you the wins and the losses." />
         <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
           {items.map((it) => (
-            <div
-              key={it.market}
-              className={`rounded-2xl border p-5 sm:p-6 bg-card flex flex-col ${
-                it.win ? "border-neon/30" : "border-loss/30"
-              }`}
-            >
+            <div key={it.market} className={`rounded-2xl border p-5 sm:p-6 bg-card flex flex-col ${it.win ? "border-neon/30" : "border-loss/30"}`}>
               <div className="flex items-center justify-between mb-3">
-                <span
-                  className={`font-display text-xs px-2 py-1 rounded-full ${
-                    it.win
-                      ? "bg-neon/15 text-neon border border-neon/30"
-                      : "bg-loss/15 text-loss border border-loss/30"
-                  }`}
-                >
+                <span className={`font-display text-xs px-2 py-1 rounded-full ${it.win ? "bg-neon/15 text-neon border border-neon/30" : "bg-loss/15 text-loss border border-loss/30"}`}>
                   {it.win ? "✅ WIN" : "❌ LOSS"}
                 </span>
                 <span className="font-display text-[11px] text-muted-foreground">{it.date}</span>
               </div>
-
-              <div className="text-foreground font-display mb-1.5 text-sm sm:text-base">
-                {it.market}
-              </div>
+              <div className="text-foreground font-display mb-1.5 text-sm sm:text-base">{it.market}</div>
               <p className="text-xs text-muted-foreground leading-relaxed mb-4">{it.desc}</p>
-
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-display text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Confidence
-                  </span>
+                  <span className="font-display text-[10px] uppercase tracking-widest text-muted-foreground">Confidence</span>
                   <span className="font-display text-xs text-amber-score">{it.confidence}/100</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-muted/60 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${
-                      it.confidence >= 80
-                        ? "bg-neon"
-                        : it.confidence >= 70
-                          ? "bg-amber-score"
-                          : "bg-loss"
-                    }`}
-                    style={{ width: `${it.confidence}%` }}
-                  />
+                  <div className={`h-full rounded-full ${it.confidence >= 80 ? "bg-neon" : it.confidence >= 70 ? "bg-amber-score" : "bg-loss"}`}
+                    style={{ width: `${it.confidence}%` }} />
                 </div>
               </div>
-
               <div className="mt-auto pt-3 border-t border-border/60">
-                <div
-                  className={`font-display text-2xl sm:text-3xl font-bold ${
-                    it.win ? "text-neon" : "text-loss"
-                  }`}
-                >
-                  {it.roi}
-                </div>
+                <div className={`font-display text-2xl sm:text-3xl font-bold ${it.win ? "text-neon" : "text-loss"}`}>{it.roi}</div>
                 <div className="text-xs text-muted-foreground mt-0.5">ROI</div>
               </div>
             </div>
@@ -404,9 +342,8 @@ function Transparency() {
   );
 }
 
-
 /* ── FINAL CTA ───────────────────────────────────────── */
-function FinalCTA() {
+function FinalCTA({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   return (
     <section className="py-24 sm:py-32 relative overflow-hidden">
       <div className="absolute inset-0 -z-10 mesh-cta" />
@@ -419,14 +356,14 @@ function FinalCTA() {
           Every 5 seconds, our bots are watching. Are you?
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-          <a href={TG} target="_blank" rel="noopener noreferrer"
+          <a href={TG_FREE} target="_blank" rel="noopener noreferrer"
             className="btn-neon-border rounded-xl px-6 py-3.5 font-display font-semibold">
             Join Free Channel on Telegram →
           </a>
-          <a href={TG} target="_blank" rel="noopener noreferrer"
+          <button onClick={onUpgradeClick}
             className="btn-gradient-cta rounded-xl px-6 py-3.5 font-display font-semibold">
             Get VIP Access →
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -445,7 +382,7 @@ function Footer() {
           <div className="flex gap-5 text-muted-foreground">
             <a href="#" className="hover:text-foreground transition">Terms</a>
             <a href="#" className="hover:text-foreground transition">Privacy</a>
-            <a href={TG} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">Contact</a>
+            <a href={TG_FREE} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">Contact</a>
           </div>
         </div>
         <p className="text-xs text-muted-foreground mt-6 max-w-2xl">
