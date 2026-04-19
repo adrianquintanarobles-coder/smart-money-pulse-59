@@ -266,7 +266,7 @@ function Pricing({ onUpgradeClick }: { onUpgradeClick: () => void }) {
               <span className="font-display text-xs uppercase tracking-widest text-neon border border-neon/40 bg-neon/10 rounded-full px-2.5 py-1">VIP</span>
             </div>
             <div className="mb-1">
-              <span className="font-display text-sm text-muted-foreground line-through">$59/mo</span>
+              <span className="font-display text-sm text-muted-foreground line-through">$35/mo</span>
             </div>
             <div className="flex items-baseline gap-2 mb-1">
               <span className="font-display text-5xl font-bold text-gradient-cta">$15</span>
