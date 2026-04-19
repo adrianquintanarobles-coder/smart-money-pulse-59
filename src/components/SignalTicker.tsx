@@ -8,7 +8,7 @@ interface Signal {
   prob: number;
 }
 
-const API_URL = "https://TU-URL-RAILWAY.railway.app"; // ← REEMPLAZA AQUÍ
+const API_URL = process.env.REACT_APP_API_URL || "https://polymarket-bot-production-5124.up.railway.app"; // ← REEMPLAZA AQUÍ
 
 export function SignalTicker() {
   const [signals, setSignals] = useState<Signal[]>([]);
