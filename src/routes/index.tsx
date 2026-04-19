@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { LiveBadge } from "@/components/LiveBadge";
 import { PhoneMockup } from "@/components/PhoneMockup";
 import { Counter } from "@/components/Counter";
@@ -6,42 +6,34 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { Navbar } from "@/components/Navbar";
 import { SignalTicker } from "@/components/SignalTicker";
 import { FAQ } from "@/components/FAQ";
+import { CheckoutModal } from "@/components/CheckoutModal";
 import { Filter, Brain, ShieldCheck, Gauge, Check, X, Zap, Link as LinkIcon, Target } from "lucide-react";
 
 const TG = "https://t.me/+BYejWJEm0SI4MmE0";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-  head: () => ({
-    meta: [
-      { title: "Polymarket Smart Money Tracker v3.6 — Follow the Whales" },
-      { name: "description", content: "Real-time Polymarket Smart Money alerts every 5 seconds. Filtered by verified ROI, win streaks, AI analysis. Free Telegram channel + VIP whale signals." },
-      { property: "og:title", content: "Polymarket Smart Money Tracker v3.6" },
-      { property: "og:description", content: "Stop guessing. Follow the whales. Real-time Smart Money alerts on Polymarket." },
-    ],
-  }),
-});
-
 function Index() {
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Navbar />
+      <Navbar onUpgradeClick={() => setCheckoutOpen(true)} />
       <div id="top" />
-      <Hero />
+      <Hero onUpgradeClick={() => setCheckoutOpen(true)} />
       <Features />
       <DashboardPreview />
       <LiveStats />
-      <Pricing />
+      <Pricing onUpgradeClick={() => setCheckoutOpen(true)} />
       <Transparency />
       <FAQ />
-      <FinalCTA />
+      <FinalCTA onUpgradeClick={() => setCheckoutOpen(true)} />
       <Footer />
+      <CheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </main>
   );
 }
 
 /* ── HERO ─────────────────────────────────────────────── */
-function Hero() {
+function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 dot-grid opacity-30" />
@@ -68,12 +60,12 @@ function Hero() {
             >
               Join Free on Telegram <span aria-hidden>→</span>
             </a>
-            <a
-              href="#pricing"
+            <button
+              onClick={onUpgradeClick}
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto"
             >
               See VIP Features <span aria-hidden>↓</span>
-            </a>
+            </button>
           </div>
 
           <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs sm:text-sm text-muted-foreground">
@@ -227,7 +219,7 @@ function LiveStats() {
 }
 
 /* ── PRICING ─────────────────────────────────────────── */
-function Pricing() {
+function Pricing({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   const free = [
     "Signals $50–$500",
     "Polymarket links",
@@ -281,14 +273,16 @@ function Pricing() {
             <div className="flex items-center justify-between mb-4">
               <span className="font-display text-xs uppercase tracking-widest text-neon border border-neon/40 bg-neon/10 rounded-full px-2.5 py-1">VIP</span>
             </div>
-            <div className="flex items-baseline gap-2 mb-6">
-              <span className="font-display text-3xl sm:text-4xl font-bold">Early Access</span>
+            <div className="flex items-baseline gap-2 mb-1">
+              <span className="font-display text-5xl font-bold text-gradient-cta">$29</span>
+              <span className="text-muted-foreground text-sm">/mo</span>
             </div>
-            <p className="text-xs text-muted-foreground -mt-4 mb-6">Special launch pricing</p>
-            <a href={TG} target="_blank" rel="noopener noreferrer"
+            <p className="text-xs text-amber-score mb-6">🔥 Launch price — limited spots</p>
+            <button
+              onClick={onUpgradeClick}
               className="btn-gradient-cta block text-center rounded-xl font-display font-semibold py-3 hover:opacity-95 transition mb-6">
               Upgrade to VIP →
-            </a>
+            </button>
             <ul className="space-y-2.5 text-sm">
               {vip.map((f) => (
                 <li key={f} className="flex items-start gap-2.5"><Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span></li>
@@ -404,9 +398,8 @@ function Transparency() {
   );
 }
 
-
 /* ── FINAL CTA ───────────────────────────────────────── */
-function FinalCTA() {
+function FinalCTA({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   return (
     <section className="py-24 sm:py-32 relative overflow-hidden">
       <div className="absolute inset-0 -z-10 mesh-cta" />
@@ -423,10 +416,11 @@ function FinalCTA() {
             className="btn-neon-border rounded-xl px-6 py-3.5 font-display font-semibold">
             Join Free Channel on Telegram →
           </a>
-          <a href={TG} target="_blank" rel="noopener noreferrer"
+          <button
+            onClick={onUpgradeClick}
             className="btn-gradient-cta rounded-xl px-6 py-3.5 font-display font-semibold">
             Get VIP Access →
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -455,3 +449,5 @@ function Footer() {
     </footer>
   );
 }
+
+export default Index;
