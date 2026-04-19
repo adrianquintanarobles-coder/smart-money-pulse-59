@@ -8,37 +8,83 @@ interface Signal {
   prob: number;
 }
 
-const mockSignals: Signal[] = [
-  { apodo: "El Oráculo", mercado: "Will Trump win 2024?", usd: 2500, prob: 75 },
-  { apodo: "La Ballena Blanca", mercado: "Bitcoin above $50k by Dec?", usd: 5000, prob: 82 },
-  { apodo: "El Arquitecto", mercado: "Fed rate cut in Q4?", usd: 3200, prob: 68 },
-  { apodo: "El Tiburón", mercado: "Ethereum 2025 outlook", usd: 1800, prob: 71 },
-  { apodo: "La Sombra", mercado: "Tech stocks rally", usd: 4100, prob: 79 },
-  { apodo: "El Estratega", mercado: "Oil prices volatility", usd: 2900, prob: 73 },
-];
+const API_URL = "https://TU-URL-RAILWAY.railway.app"; // ← REEMPLAZA AQUÍ
 
 export function SignalTicker() {
+  const [signals, setSignals] = useState<Signal[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [connected, setConnected] = useState(false);
 
+  // Mock data fallback
+  const mockSignals: Signal[] = [
+    { apodo: "El Oráculo", mercado: "Will Trump win 2024?", usd: 2500, prob: 75 },
+    { apodo: "La Ballena Blanca", mercado: "Bitcoin above $50k by Dec?", usd: 5000, prob: 82 },
+    { apodo: "El Arquitecto", mercado: "Fed rate cut in Q4?", usd: 3200, prob: 68 },
+    { apodo: "El Tiburón", mercado: "Ethereum 2025 outlook", usd: 1800, prob: 71 },
+    { apodo: "La Sombra", mercado: "Tech stocks rally", usd: 4100, prob: 79 },
+    { apodo: "El Estratega", mercado: "Oil prices volatility", usd: 2900, prob: 73 },
+  ];
+
+  // Fetch de API real
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % mockSignals.length);
-    }, 5000);
+    const fetchSignals = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/signals`, {
+          method: 'GET',
+          mode: 'cors',
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Señales obtenidas:', data);
+          setSignals(Array.isArray(data) ? data : data.signals || mockSignals);
+          setConnected(true);
+        } else {
+          console.warn('API respondió con error, usando mock');
+          setSignals(mockSignals);
+          setConnected(false);
+        }
+      } catch (error) {
+        console.warn('❌ Error conectando a API:', error);
+        setSignals(mockSignals);
+        setConnected(false);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchSignals();
+    
+    // Refresca cada 5 segundos
+    const interval = setInterval(fetchSignals, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  const signal = mockSignals[currentIndex];
+  // Rotación automática
+  const displaySignals = signals.length > 0 ? signals : mockSignals;
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % displaySignals.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [displaySignals.length]);
+
+  const signal = displaySignals[currentIndex];
 
   return (
     <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm overflow-hidden">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border/60 bg-gradient-to-r from-neon/5 to-electric/5">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-neon" />
-          <span className="font-semibold text-sm text-neon">LIVE SIGNALS</span>
+          <span className="font-semibold text-sm text-neon">
+            LIVE SIGNALS {connected ? '🟢' : '🔴'}
+          </span>
         </div>
         <span className="text-xs text-muted-foreground">
-          {currentIndex + 1} / {mockSignals.length}
+          {currentIndex + 1} / {displaySignals.length}
         </span>
       </div>
 
@@ -77,11 +123,11 @@ export function SignalTicker() {
         </div>
 
         <div className="flex gap-1 justify-center pt-4">
-          {mockSignals.map((_, i) => (
+          {displaySignals.map((_, i) => (
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all ${
-                i === currentIndex ? "bg-neon w-4" : "bg-border w-1.5"
+                i === currentIndex ? "w-6 bg-neon" : "w-1.5 bg-muted-foreground/30"
               }`}
             />
           ))}

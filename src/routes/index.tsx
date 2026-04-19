@@ -165,13 +165,67 @@ function DashboardPreview() {
 }
 
 /* ── LIVE STATS ──────────────────────────────────────── */
+
+
 function LiveStats() {
-  const stats = [
+  const API_URL = process.env.REACT_APP_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
+
+  const [stats, setStats] = useState<any[]>([
     { value: <Counter to={2847} />, label: "Signals analyzed today" },
     { value: <Counter to={73} suffix="%" />, label: "Avg win rate · last 30 days" },
     { value: <span>&lt;5s</span>, label: "Detection latency" },
     { value: <Counter to={2.1} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/stats`, {
+          method: 'GET',
+          mode: 'cors',
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Stats obtenidas:', data);
+          
+          setStats([
+            { 
+              value: <Counter to={data.total_signals || 2847} />, 
+              label: "Signals analyzed today" 
+            },
+            { 
+              value: <Counter to={Math.round((data.success_rate || 0.73) * 100)} suffix="%" />, 
+              label: "Avg win rate · last 30 days" 
+            },
+            { 
+              value: <span>&lt;5s</span>, 
+              label: "Detection latency" 
+            },
+            { 
+              value: <Counter 
+                to={(data.total_volume || 2100000) / 1000000} 
+                prefix="$" 
+                suffix="M" 
+                decimals={1} 
+              />, 
+              label: "Whale capital tracked today" 
+            },
+          ]);
+        }
+      } catch (error) {
+        console.warn('❌ Error obteniendo stats:', error);
+        // Mantiene los valores por defecto
+      }
+    };
+
+    fetchStats();
+    
+    // Refresca cada 10 segundos
+    const interval = setInterval(fetchStats, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="py-16 sm:py-20 relative overflow-hidden">
       <div className="absolute inset-0 -z-10 mesh-cta opacity-15" />
