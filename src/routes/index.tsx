@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LiveBadge } from "@/components/LiveBadge";
 import { PhoneMockup } from "@/components/PhoneMockup";
 import { Counter } from "@/components/Counter";
