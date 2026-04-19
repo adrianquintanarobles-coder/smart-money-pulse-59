@@ -66,10 +66,10 @@ function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
               className="btn-neon-border inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-display text-sm sm:text-base font-semibold w-full sm:w-auto">
               Join Free on Telegram <span aria-hidden>→</span>
             </a>
-            <button onClick={onUpgradeClick}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto">
-              See VIP Features <span aria-hidden>↓</span>
-            </button>
+           <a href="#pricing"
+  className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto">
+  See VIP Features <span aria-hidden>↓</span>
+</a>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs sm:text-sm text-muted-foreground">
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Track record auto-audited</span>
