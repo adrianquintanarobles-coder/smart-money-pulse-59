@@ -1,13 +1,4 @@
-import { useEffect, useState } from "react";
 import { BarChart3, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react";
-
-interface Stats {
-  total: number;
-  aciertos: number;
-  fallos: number;
-  pendientes: number;
-  tasa_acierto: string;
-}
 
 function Counter({ value, label, icon: Icon, color }: { value: string | number; label: string; icon: any; color: string }) {
   return (
@@ -22,39 +13,13 @@ function Counter({ value, label, icon: Icon, color }: { value: string | number; 
 }
 
 export function LiveStats() {
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch("https://polymarket-bot-production-5124.up.railway.app/api/stats");
-        const data = await response.json();
-        setStats(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
-    const interval = setInterval(fetchStats, 30000); // Actualiza cada 30s
-    return () => clearInterval(interval);
-  }, []);
-
-  if (loading || !stats) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="rounded-xl border border-border bg-card/60 p-6 animate-pulse">
-            <div className="h-8 bg-border/50 rounded mb-3 w-3/4 mx-auto" />
-            <div className="h-4 bg-border/50 rounded w-1/2 mx-auto" />
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const stats = {
+    total: 247,
+    aciertos: 156,
+    fallos: 68,
+    pendientes: 23,
+    tasa_acierto: "70%",
+  };
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
