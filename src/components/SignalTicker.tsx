@@ -38,7 +38,8 @@ export function SignalTicker() {
         if (response.ok) {
           const data = await response.json();
           console.log('✅ Señales obtenidas:', data);
-          setSignals(Array.isArray(data) ? data : data.signals || mockSignals);
+          const signalsArray = data.signals || [];
+          setSignals(signalsArray.length > 0 ? signalsArray : mockSignals);
           setConnected(true);
         } else {
           console.warn('API respondió con error, usando mock');
@@ -71,10 +72,15 @@ export function SignalTicker() {
 
     return () => clearInterval(interval);
   }, [displaySignals.length]);
+  
 
-  const signal = displaySignals[currentIndex];
+ const signal = displaySignals[currentIndex];
 
-  return (
+if (!signal) {
+  return <div className="p-6 text-center text-muted-foreground">Cargando señales...</div>;
+}
+
+return (
     <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm overflow-hidden">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border/60 bg-gradient-to-r from-neon/5 to-electric/5">
         <div className="flex items-center gap-2">
