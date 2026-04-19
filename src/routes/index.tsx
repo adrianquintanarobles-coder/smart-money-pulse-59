@@ -191,11 +191,11 @@ function LiveStats() {
           
           setStats([
             { 
-              value: <Counter to={data.total_signals || 2847} />, 
+              value: <Counter to={data.total_signals || 0} />, 
               label: "Signals analyzed today" 
             },
             { 
-              value: <Counter to={Math.round((data.success_rate || 0.73) * 100)} suffix="%" />, 
+              value: <Counter to={Math.round((data.success_rate || 0) * 100)} suffix="%" />, 
               label: "Avg win rate · last 30 days" 
             },
             { 
@@ -204,7 +204,7 @@ function LiveStats() {
             },
             { 
               value: <Counter 
-                to={(data.total_volume || 2100000) / 1000000} 
+                to={(data.total_volume || 0) / 1000000} 
                 prefix="$" 
                 suffix="M" 
                 decimals={1} 
