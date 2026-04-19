@@ -171,11 +171,11 @@ function LiveStats() {
   const API_URL = process.env.REACT_APP_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
 
   const [stats, setStats] = useState<any[]>([
-    { value: <Counter to={2847} />, label: "Signals analyzed today" },
-    { value: <Counter to={73} suffix="%" />, label: "Avg win rate · last 30 days" },
-    { value: <span>&lt;5s</span>, label: "Detection latency" },
-    { value: <Counter to={2.1} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
-  ]);
+  { value: <Counter to={0} />, label: "Signals analyzed today" },
+  { value: <Counter to={0} suffix="%" />, label: "Avg win rate · last 30 days" },
+  { value: <span>&lt;5s</span>, label: "Detection latency" },
+  { value: <Counter to={0} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
+]);
 
   useEffect(() => {
     const fetchStats = async () => {
