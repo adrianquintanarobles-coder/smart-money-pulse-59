@@ -176,7 +176,7 @@ function FormattedVolume({ volume }: { volume: number }) {
 }
 
 function LiveStats() {
-  const API_URL = process.env.REACT_APP_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
+  const API_URL = import.meta.env.VITE_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
 
   const [stats, setStats] = useState<any[]>([
   { value: <Counter to={0} />, label: "Signals analyzed today" },
