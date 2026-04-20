@@ -165,7 +165,15 @@ function DashboardPreview() {
 }
 
 /* ── LIVE STATS ──────────────────────────────────────── */
-
+function FormattedVolume({ volume }: { volume: number }) {
+  if (volume >= 1000000) {
+    return <>${(volume / 1000000).toFixed(2)}M</>;
+  } else if (volume >= 1000) {
+    return <>${(volume / 1000).toFixed(1)}k</>;
+  } else {
+    return <>${volume.toFixed(0)}</>;
+  }
+}
 
 function LiveStats() {
   const API_URL = process.env.REACT_APP_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
@@ -201,14 +209,9 @@ function LiveStats() {
             { 
               value: <span>&lt;5s</span>, 
               label: "Detection latency" 
-            },
+            }, 
             { 
-              value: <Counter 
-                to={(data.total_volume || 0) / 1000000} 
-                prefix="$" 
-                suffix="M" 
-                decimals={1} 
-              />, 
+              value: <FormattedVolume volume={data.total_volume || 0} />, 
               label: "Whale capital tracked today" 
             },
           ]);
