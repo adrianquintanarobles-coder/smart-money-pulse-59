@@ -11,16 +11,13 @@ import {
   ReferenceLine
 } from "recharts";
 
-// Generamos 90 días de datos con caída en medio y pico al final
 const generateData = () => {
   const data = [];
   const days = 90;
   
   for (let i = 1; i <= days; i++) {
-    // 1. Base matemática exponencial pura (de 150 a 14575)
     let val = 150 * Math.pow(14575 / 150, i / days);
 
-    // 2. Simulamos una caída fuerte en el medio (Market Correction)
     if (i > 35 && i < 60) {
       const dipCenter = 48; 
       const distance = Math.abs(i - dipCenter);
@@ -30,11 +27,9 @@ const generateData = () => {
       }
     }
 
-    // 3. Ruido diario (volatilidad ±3%)
     const noise = 1 + (Math.random() * 0.06 - 0.03);
     val *= noise;
 
-    // 4. FORZAMOS EL FINAL: En el punto más alto
     if (i === days) val = 14575; 
     if (i === days - 1) val = 13900 + (Math.random() * 150); 
 
@@ -151,17 +146,19 @@ export function SignalTicker() {
               cursor={{ stroke: 'rgba(0, 255, 136, 0.5)', strokeWidth: 2, strokeDasharray: '4 4' }} 
             />
 
+            {/* Etiqueta movida hacia arriba para evitar el solapamiento */}
             <ReferenceLine 
               y={150} 
-              stroke="rgba(255,255,255,0.2)" 
+              stroke="rgba(255,255,255,0.15)" 
               strokeDasharray="3 3" 
               label={{ 
-                value: 'INITIAL CAPITAL: $150', 
+                value: 'INITIAL: $150', 
                 position: 'insideTopLeft', 
-                fill: 'rgba(255,255,255,0.4)', 
-                fontSize: 10, 
-                dy: -10,
-                dx: 20
+                fill: '#999999', 
+                fontSize: 11, 
+                dy: -25, // La eleva por encima de la curva verde
+                dx: 30,  // La desplaza a la derecha
+                fontFamily: 'var(--font-display)'
               }} 
             />
             
@@ -180,17 +177,24 @@ export function SignalTicker() {
         </ResponsiveContainer>
       </div>
 
-      {/* Footer Labels */}
-      <div className="bg-black/20 border-t border-white/5 px-4 sm:px-8 py-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-        <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-           <div className="h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_5px_#00ff88]" /> Compound Interest
-        </span>
-        <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-           <div className="h-1.5 w-1.5 rounded-full bg-electric shadow-[0_0_5px_#00e5ff]" /> Risk Management
-        </span>
-        <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-           <div className="h-1.5 w-1.5 rounded-full bg-amber-score shadow-[0_0_5px_#ffab00]" /> Automatic Copying
-        </span>
+      {/* Footer Metrics - Ahora con información esencial */}
+      <div className="bg-black/20 border-t border-white/5 px-6 sm:px-8 py-5 flex flex-wrap items-center justify-between sm:justify-center gap-x-12 gap-y-4">
+        <div className="flex flex-col">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Total Trades</span>
+          <span className="text-sm font-display text-white font-bold">1,240</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Avg. Holding Time</span>
+          <span className="text-sm font-display text-white font-bold">3.5 Hours</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Profit Factor</span>
+          <span className="text-sm font-display text-white font-bold">2.4x</span>
+        </div>
+        <div className="flex flex-col hidden sm:flex">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Market Correlation</span>
+          <span className="text-sm font-display text-white font-bold">Low (0.12)</span>
+        </div>
       </div>
     </div>
   );
