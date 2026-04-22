@@ -66,10 +66,10 @@ function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
               className="btn-neon-border inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-display text-sm sm:text-base font-semibold w-full sm:w-auto">
               Join Free on Telegram <span aria-hidden>→</span>
             </a>
-           <a href="#pricing"
-  className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto">
-  See VIP Features <span aria-hidden>↓</span>
-</a>
+            <a href="#pricing"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-electric/40 bg-electric/5 hover:bg-electric/10 text-electric px-6 py-3.5 font-display text-sm sm:text-base transition w-full sm:w-auto">
+              See VIP Features <span aria-hidden>↓</span>
+            </a>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs sm:text-sm text-muted-foreground">
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Track record auto-audited</span>
@@ -77,9 +77,13 @@ function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
             <span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon" /> Filters verified wallets only</span>
           </div>
         </div>
-        <div className="mt-14 sm:mt-16 -mx-5 sm:-mx-8">
+        
+        {/* AQUÍ ES DONDE LLAMAMOS AL NUEVO GRÁFICO (Con márgenes mejorados) */}
+        <div className="mt-16 sm:mt-24 relative max-w-5xl mx-auto px-2 sm:px-4">
+          <div className="absolute inset-0 bg-neon/5 blur-[100px] -z-10 rounded-full" />
           <SignalTicker />
         </div>
+        
       </div>
     </section>
   );
