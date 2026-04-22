@@ -1,13 +1,13 @@
-import { CheckCheck, ExternalLink, Brain } from "lucide-react";
+import { CheckCheck, ExternalLink } from "lucide-react";
 
 export function PhoneMockup() {
   return (
-    <div className="mx-auto w-[320px] sm:w-[340px] relative mt-10 mb-8">
-      {/* Brillo de fondo - Más agresivo para destacar el móvil */}
+    <div className="mx-auto w-[320px] sm:w-[360px] relative mt-10 mb-8">
+      {/* Brillo de fondo verdecillo agresivo */}
       <div className="absolute inset-0 bg-neon/20 blur-[100px] -z-10 rounded-full" />
 
       {/* Marco del Teléfono */}
-      <div className="relative rounded-[2.5rem] border-[6px] border-[#101010] bg-[#0e1621] shadow-2xl overflow-hidden h-[580px] flex flex-col hover:scale-[1.02] transition-transform duration-500">
+      <div className="relative rounded-[2.5rem] border-[6px] border-[#101010] bg-[#0e1621] shadow-[0_0_40px_rgba(0,255,136,0.15)] overflow-hidden h-[620px] flex flex-col hover:scale-[1.02] transition-transform duration-500">
         
         {/* Notch (Cámara superior) */}
         <div className="absolute top-0 inset-x-0 h-6 bg-[#101010] rounded-b-3xl w-[40%] mx-auto z-20" />
@@ -26,53 +26,78 @@ export function PhoneMockup() {
         </div>
 
         {/* Área del Chat de Telegram */}
-        <div className="flex-1 p-3 flex flex-col justify-end gap-3 bg-[#0e1621] pb-6 relative overflow-hidden">
+        {/* Usamos un scroll oculto por si el contenido es muy largo */}
+        <div className="flex-1 p-3 flex flex-col gap-3 bg-[#0e1621] pb-6 relative overflow-y-auto scrollbar-hide custom-scrollbar-hide">
           
-          {/* Mensaje Anterior (Falso historial - Cierre en positivo) */}
-          <div className="bg-[#182533] rounded-2xl rounded-tl-sm p-3 max-w-[85%] opacity-60">
-            <p className="text-[#e4e4e6] text-[13px] mb-1">🎯 <strong>TAKE PROFIT HIT</strong></p>
-            <p className="text-[#e4e4e6] text-[12px]">Señal #4892 cerrada automáticamente.</p>
-            <p className="text-neon text-[13px] font-bold mt-1">Beneficio: +$1,240 (+142%)</p>
-            <div className="flex justify-end items-center gap-1 mt-1 text-[#798e9d] text-[10px]">
-              14:20 <CheckCheck className="w-3 h-3 text-[#58abff]" />
-            </div>
-          </div>
-
-          {/* Mensaje Principal VIP (La Droga) */}
-          <div className="bg-[#182533] rounded-2xl rounded-tl-sm p-4 shadow-lg border border-neon/20 text-[13.5px] text-[#e4e4e6] leading-relaxed relative w-[95%]">
+          {/* Mensaje Principal VIP (Basado en tu estructura real) */}
+          <div className="bg-[#182533] mt-auto rounded-2xl rounded-tl-sm p-3.5 shadow-lg border border-neon/30 text-[12.5px] text-[#e4e4e6] leading-[1.6] relative w-[96%]">
             
-            <p className="font-bold text-neon text-base mb-2 border-b border-neon/20 pb-2">
-              🐋 ALERTA BALLENA VIP
+            <p className="font-bold text-white text-[13.5px] mb-2 flex items-center gap-1.5">
+              🐋 ALERTA VIP — BALLENA VERIFICADA 🐋
             </p>
             
-            <div className="space-y-1.5 mb-3 mt-3">
-              <p>📍 <strong>Mercado:</strong> Fed Rate Cut in Q4?</p>
+            <div className="space-y-0.5 mb-3">
+              <p>🏷️ <strong>Apodo:</strong> El Arquitecto</p>
+              <p>📋 <strong>Mercado:</strong> Bitcoin above $100k by June?</p>
               <p>🎯 <strong>Posición:</strong> <span className="text-neon font-bold">BUY → YES</span></p>
-              <p>💰 <strong>Capital:</strong> <span className="text-foreground font-bold">$45,200</span> <span className="text-xs text-muted-foreground">(Gran volumen)</span></p>
-              <p className="flex items-center gap-2">
-                ⚡ <strong>Confianza:</strong> <span className="bg-neon/10 text-neon px-2 py-0.5 rounded font-bold text-xs border border-neon/20">94/100</span>
-              </p>
-            </div>
-            
-            <div className="bg-[#0e1621] p-3 rounded-lg border border-border/50 mb-3">
-              <p className="text-xs text-electric font-bold mb-1 flex items-center gap-1">
-                <Brain className="w-3 h-3"/> Claude AI Analysis:
-              </p>
-              <p className="text-[12px] text-[#8b9bb4] italic leading-snug">
-                "Esta billetera tiene un 89% win-rate en macroeconomía. Acaba de inyectar liquidez 15 mins antes de la publicación del IPC. Dinero institucional anticipando una caída de tipos."
-              </p>
+              <p>💰 <strong>Invertido:</strong> $15,450.00 USD</p>
+              <p>📊 <strong>Precio entrada:</strong> 42.0%</p>
+              <p>📈 <strong>Precio ahora:</strong> <span className="text-neon font-bold">48.5% (+15.4%)</span></p>
+              <p>📈 <strong>Perfil:</strong> ROI 34.2% | PnL $142,500 | 89 pos.</p>
+              <p>📜 <strong>Historial:</strong> Racha de 4 wins 🔥</p>
+              <p className="flex items-center gap-1">🎯 <strong>Score:</strong> <span className="bg-amber-500/20 text-amber-500 px-1 rounded font-bold text-xs">94/100 ⚡</span></p>
+              <p className="text-electric">🔑 <strong>Wallet:</strong> 0x7a2...f9e4</p>
             </div>
 
-            {/* Botón de acción simulado de Telegram */}
-            <div className="bg-[#2b5278] hover:bg-[#346290] transition-colors cursor-pointer text-center py-2.5 rounded-xl font-bold text-white text-[13px] flex items-center justify-center gap-2 mt-2 shadow-md">
-              Apostar en Polymarket <ExternalLink className="w-3.5 h-3.5" />
+            {/* Separador sutil */}
+            <div className="h-px w-full bg-white/10 my-2" />
+            
+            <div className="space-y-0.5 mb-3">
+              <p>📄 <strong>El Arquitecto -- Ficha</strong></p>
+              <p>💰 <strong>Total invertido:</strong> $412,000</p>
+              <p>🎯 <strong>Tasa de acierto:</strong> <span className="text-neon font-bold">78% (42/54)</span></p>
+              <p className="line-clamp-2">📋 <strong>Mercados:</strong> BTC/USD price, ETH ETF approval, Fed Rate decisions</p>
+              <p>⚡ <strong>Outcome frecuente:</strong> Yes</p>
+            </div>
+
+            <div className="h-px w-full bg-white/10 my-2" />
+
+            <div className="mb-3">
+              <p>📰 <strong>Contexto:</strong> <em>Claude AI detecta acumulación masiva en wallets institucionales tras las últimas declaraciones de la FED. Setup de alta probabilidad.</em></p>
+            </div>
+
+            <p className="text-electric hover:underline cursor-pointer flex items-center gap-1 mb-1">
+              🔗 Ver mercado en Polymarket
+            </p>
+
+            {/* Rich Link Preview simulando Polymarket */}
+            <div className="mt-2 rounded-lg border border-black/30 bg-[#233040] overflow-hidden flex flex-col shadow-inner">
+              <div className="h-[2px] w-full bg-blue-500" />
+              <div className="p-2">
+                <p className="text-[#58abff] text-[11px] font-semibold mb-0.5">Polymarket</p>
+                <p className="font-bold text-[12px] text-white leading-tight mb-1">
+                  Bitcoin above $100k by June 2026? | Polymarket
+                </p>
+                <p className="text-[10px] text-[#8b9bb4] line-clamp-2 leading-snug">
+                  Real-time prediction market for BTC price action. Follow the smart money and trade your beliefs on Polymarket.
+                </p>
+              </div>
+              <div className="h-20 w-full bg-gradient-to-r from-orange-500 to-amber-500 relative flex items-center justify-center">
+                 <div className="absolute inset-0 opacity-20 bg-[url('https://polymarket.com/favicon.ico')] bg-cover bg-center" />
+                 <span className="text-white font-display font-black text-2xl tracking-tighter shadow-black drop-shadow-md">₿ $100k</span>
+              </div>
+              <div className="p-2 flex justify-between items-center bg-[#1c2734]">
+                <span className="text-white font-bold text-[11px]">48.5% chance</span>
+                <span className="text-[#8b9bb4] text-[9px] flex items-center gap-1"><ExternalLink className="w-2.5 h-2.5"/> Polymarket</span>
+              </div>
             </div>
             
-            <div className="flex justify-between items-center mt-3 text-[#798e9d] text-[10px]">
-              <span className="bg-background/50 px-2 py-0.5 rounded">Latencia: 1.2s</span>
-              <span className="flex items-center gap-1">18:40 <CheckCheck className="w-3 h-3 text-[#58abff]" /></span>
+            {/* Hora y check */}
+            <div className="flex justify-end items-center mt-2 text-[#798e9d] text-[10px]">
+              <span className="flex items-center gap-1">18:42 <CheckCheck className="w-3 h-3 text-[#58abff]" /></span>
             </div>
           </div>
+
         </div>
       </div>
     </div>
