@@ -78,7 +78,7 @@ function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
           </div>
         </div>
         
-        {/* AQUÍ ES DONDE LLAMAMOS AL NUEVO GRÁFICO (Con márgenes mejorados) */}
+        {/* Gráfico / Signal Ticker adaptado */}
         <div className="mt-16 sm:mt-24 relative max-w-5xl mx-auto px-2 sm:px-4">
           <div className="absolute inset-0 bg-neon/5 blur-[100px] -z-10 rounded-full" />
           <SignalTicker />
@@ -89,55 +89,76 @@ function Hero({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   );
 }
 
-/* ── FEATURES ─────────────────────────────────────────── */
+/* ── FEATURES (BENTO BOX) ─────────────────────────────── */
 function Features() {
-  const topFeatures = [
-    { icon: Filter, tone: "neon", title: "ROI Filtering", body: "Every wallet scored by PnL / Capital at Risk across 5+ trades. No history = no signal." },
-    { icon: Brain, tone: "electric", title: "AI Analysis", body: "Each VIP signal includes a 3-line institutional reasoning report with breaking news context. Powered by Claude AI." },
-    { icon: Gauge, tone: "amber", title: "Confidence Score 0–100", body: "Proprietary algorithm rates each signal by wallet history, liquidity, position size and news." },
-  ] as const;
-
-  const toneStyles: Record<string, { box: string; ring: string; text: string; glow: string }> = {
-    neon:     { box: "bg-neon/10",        ring: "border-neon/30",        text: "text-neon",        glow: "from-neon/10" },
-    electric: { box: "bg-electric/10",    ring: "border-electric/30",    text: "text-electric",    glow: "from-electric/10" },
-    amber:    { box: "bg-amber-score/10", ring: "border-amber-score/30", text: "text-amber-score", glow: "from-amber-score/10" },
-  };
-
   return (
-    <section className="py-16 sm:py-20">
+    <section className="py-16 sm:py-24 relative">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Architecture" title="Four layers of intelligence. Zero noise." />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto">
-          {topFeatures.map(({ icon: Icon, tone, title, body }) => {
-            const t = toneStyles[tone];
-            return (
-              <div key={title} className="group relative rounded-2xl border border-border bg-card p-6 sm:p-7 hover:border-foreground/20 transition overflow-hidden">
-                <div className={`absolute inset-0 -z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition bg-gradient-to-br ${t.glow} to-transparent`} />
-                <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border ${t.box} ${t.ring} ${t.text} mb-4`}>
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="font-display text-lg sm:text-xl font-semibold mb-2">{title}</h3>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{body}</p>
-              </div>
-            );
-          })}
-        </div>
-        <div className="mt-4 sm:mt-5 max-w-5xl mx-auto">
-          <div className="group relative rounded-2xl border border-border border-l-0 bg-[color-mix(in_oklab,var(--card)_85%,var(--neon)_8%)] p-6 sm:p-8 overflow-hidden">
-            <span aria-hidden className="absolute left-0 top-0 bottom-0 w-1 bg-neon shadow-[0_0_18px_0_color-mix(in_oklab,var(--neon)_70%,transparent)]" />
-            <div className="absolute inset-0 -z-10 rounded-2xl opacity-60 bg-gradient-to-br from-neon/10 via-transparent to-transparent" />
-            <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-amber-score/40 bg-amber-score/10 text-amber-score font-display text-[10px] uppercase tracking-widest px-2.5 py-1">
-              ★ Unique to us
-            </span>
-            <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border bg-neon/10 border-neon/30 text-neon mb-4">
-              <ShieldCheck className="h-5 w-5" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-5xl mx-auto">
+          
+          {/* 1. AI Analysis */}
+          <div className="group relative rounded-3xl border border-border bg-card/30 p-6 sm:p-8 hover:bg-card/60 hover:border-electric/40 transition-all duration-500 overflow-hidden md:col-span-2 md:row-span-1 flex flex-col justify-center cursor-default">
+            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-electric/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute right-0 top-0 opacity-0 blur-3xl group-hover:opacity-20 transition-opacity duration-700">
+              <div className="h-40 w-40 bg-electric rounded-full"></div>
             </div>
-            <h3 className="font-display text-xl sm:text-2xl font-semibold mb-2 pr-28 sm:pr-0">Auto-Resolution Audit</h3>
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl">
-              The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution.
-              Run <span className="font-display text-foreground">/resultados</span> for the full record.
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-electric/10 border border-electric/30 text-electric mb-5 shadow-[0_0_15px_rgba(0,195,255,0.1)]">
+              <Brain className="h-6 w-6" />
+            </div>
+            <h3 className="font-display text-xl sm:text-2xl font-bold mb-3 text-foreground">AI Analysis Powered by Claude</h3>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-md">
+              Each VIP signal includes a 3-line institutional reasoning report with breaking news context. Zero fluff, just actionable intelligence.
             </p>
           </div>
+
+          {/* 2. Confidence Score */}
+          <div className="group relative rounded-3xl border border-border bg-card/30 p-6 sm:p-8 hover:bg-card/60 hover:border-amber-score/40 transition-all duration-500 overflow-hidden md:col-span-1 flex flex-col justify-between cursor-default">
+            <div className="absolute inset-0 -z-10 bg-gradient-to-bl from-amber-score/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div>
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber-score/10 border border-amber-score/30 text-amber-score mb-5 shadow-[0_0_15px_rgba(255,170,0,0.1)]">
+                <Gauge className="h-6 w-6" />
+              </div>
+              <h3 className="font-display text-xl font-bold mb-3 text-foreground">Confidence Score 0–100</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Proprietary algorithm rates each signal by wallet history, liquidity, position size and news.
+              </p>
+            </div>
+            <div className="mt-8 font-display text-5xl font-bold text-amber-score/20 group-hover:text-amber-score/50 transition-colors duration-500 flex justify-end">
+              87<span className="text-2xl mt-auto pb-1 text-amber-score/20">/100</span>
+            </div>
+          </div>
+
+          {/* 3. ROI Filtering */}
+          <div className="group relative rounded-3xl border border-border bg-card/30 p-6 sm:p-8 hover:bg-card/60 hover:border-neon/40 transition-all duration-500 overflow-hidden md:col-span-1 cursor-default">
+            <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-neon/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neon/10 border border-neon/30 text-neon mb-5 shadow-[0_0_15px_rgba(0,255,136,0.1)]">
+              <Filter className="h-6 w-6" />
+            </div>
+            <h3 className="font-display text-xl font-bold mb-3 text-foreground">ROI Filtering</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Every wallet scored by PnL & Capital at Risk across 5+ trades. No track record = no signal.
+            </p>
+          </div>
+
+          {/* 4. Auto-Resolution Audit */}
+          <div className="group relative rounded-3xl border border-neon/30 bg-[color-mix(in_oklab,var(--card)_85%,var(--neon)_5%)] p-6 sm:p-8 hover:bg-[color-mix(in_oklab,var(--card)_75%,var(--neon)_8%)] transition-all duration-500 overflow-hidden md:col-span-2 flex flex-col justify-center cursor-default">
+            <span className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full border border-amber-score/40 bg-amber-score/10 text-amber-score font-display text-[10px] uppercase tracking-widest px-3 py-1.5 shadow-[0_0_15px_rgba(255,170,0,0.15)]">
+              ★ Unique to us
+            </span>
+            <span aria-hidden className="absolute left-0 top-0 bottom-0 w-1.5 bg-neon shadow-[0_0_20px_0_color-mix(in_oklab,var(--neon)_80%,transparent)]" />
+            
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neon/20 border border-neon/50 text-neon mb-5">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <h3 className="font-display text-xl sm:text-2xl font-bold mb-3 pr-32 sm:pr-0 text-foreground">Auto-Resolution Audit</h3>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg">
+              The only tracker that self-audits. Every signal auto-marked WIN or LOSS on market resolution. 
+              Run <span className="font-display text-neon/90 px-1.5 py-0.5 mx-1 bg-neon/10 border border-neon/20 rounded-md">/resultados</span> for the full record.
+            </p>
+          </div>
+
         </div>
       </div>
     </section>
@@ -183,11 +204,11 @@ function LiveStats() {
   const API_URL = import.meta.env.VITE_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
 
   const [stats, setStats] = useState<any[]>([
-  { value: <Counter to={0} />, label: "Signals analyzed today" },
-  { value: <Counter to={0} suffix="%" />, label: "Avg win rate · last 30 days" },
-  { value: <span>&lt;5s</span>, label: "Detection latency" },
-  { value: <Counter to={0} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
-]);
+    { value: <Counter to={0} />, label: "Signals analyzed today" },
+    { value: <Counter to={0} suffix="%" />, label: "Avg win rate · last 30 days" },
+    { value: <span>&lt;5s</span>, label: "Detection latency" },
+    { value: <Counter to={0} prefix="$" suffix="M" decimals={1} />, label: "Whale capital tracked today" },
+  ]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -222,13 +243,11 @@ function LiveStats() {
         }
       } catch (error) {
         console.warn('❌ Error obteniendo stats:', error);
-        // Mantiene los valores por defecto
       }
     };
 
     fetchStats();
     
-    // Refresca cada 10 segundos
     const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -271,85 +290,111 @@ function LiveStats() {
   );
 }
 
-/* ── PRICING ─────────────────────────────────────────── */
+/* ── PRICING (HIGH CONVERSION) ───────────────────────── */
 function Pricing({ onUpgradeClick }: { onUpgradeClick: () => void }) {
   const free = ["Signals $50–$500", "Polymarket links", "Wallet data", "Community"];
-  const freeOut = ["Whale signals", "Confidence Score", "AI Analysis", "News context"];
+  const freeOut = ["Whale signals $500+", "Confidence Score (0-100)", "Claude AI Analysis", "Auto-Resolution Audit"];
   const vip = [
-    "Everything in Free",
-    "🐋 Whale signals $500+ from verified wallets",
+    "Everything in Free, plus:",
+    "🐋 Whale signals $500+ (Verified wallets)",
     "⚡ Confidence Score (0–100)",
-    "🧠 AI Analysis — Claude AI",
-    "📰 Breaking news context",
-    "📍 Entry price vs current price",
-    "/resultados full audit track record",
+    "🧠 Claude AI Reasoning Reports",
+    "📍 Exact Entry vs Current Price",
+    "📊 /resultados Full Audit Record",
+    "🚨 Priority Telegram Delivery (<2s)",
   ];
 
   return (
-    <section id="pricing" className="py-16 sm:py-20">
+    <section id="pricing" className="py-20 sm:py-32 relative">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-neon/5 blur-[120px] -z-10 rounded-full" />
+      
       <div className="container mx-auto px-5 sm:px-8">
-        <SectionHeading eyebrow="Pricing" title="Free to start. VIP when you're ready." />
-        <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
-
-          {/* FREE */}
-          <div className="frosted rounded-2xl p-6 sm:p-8 flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-display text-xs uppercase tracking-widest text-muted-foreground border border-border rounded-full px-2.5 py-1">FREE</span>
+        <SectionHeading eyebrow="VIP Access" title="Stop missing the big moves." />
+        
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-center mt-10">
+          
+          {/* FREE TIER */}
+          <div className="rounded-3xl border border-border/50 bg-card/20 p-8 flex flex-col h-fit backdrop-blur-sm opacity-80 hover:opacity-100 transition-opacity">
+            <div className="mb-4">
+              <span className="font-display text-xs uppercase tracking-widest text-muted-foreground border border-border rounded-full px-3 py-1.5 bg-background/50">Free Tier</span>
             </div>
             <div className="flex items-baseline gap-2 mb-6">
-              <span className="font-display text-5xl font-bold">$0</span>
-              <span className="text-muted-foreground text-sm">forever</span>
+              <span className="font-display text-4xl font-bold text-foreground">$0</span>
+              <span className="text-muted-foreground text-sm">/ forever</span>
             </div>
             <a href={TG_FREE} target="_blank" rel="noopener noreferrer"
-              className="block text-center rounded-xl bg-neon text-background font-display font-semibold py-3 hover:bg-neon/90 transition mb-6">
-              Join Telegram Channel →
+              className="block text-center rounded-xl border border-border bg-background text-foreground font-display font-semibold py-3.5 hover:bg-muted transition mb-8">
+              Join Free Channel
             </a>
-            <ul className="space-y-2.5 text-sm">
+            <div className="space-y-4 text-sm">
               {free.map((f) => (
-                <li key={f} className="flex items-start gap-2.5">
-                  <Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span>
-                </li>
+                <div key={f} className="flex items-start gap-3">
+                  <Check className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
               ))}
-              {freeOut.map((f) => (
-                <li key={f} className="flex items-start gap-2.5 text-muted-foreground/70">
-                  <X className="h-4 w-4 text-loss mt-0.5 shrink-0" /><span className="line-through">{f}</span>
-                </li>
-              ))}
-            </ul>
+              <div className="pt-4 border-t border-border/50 space-y-4">
+                {freeOut.map((f) => (
+                  <div key={f} className="flex items-start gap-3 opacity-40">
+                    <X className="h-4 w-4 text-loss mt-0.5 shrink-0" />
+                    <span className="line-through text-muted-foreground">{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* VIP */}
-          <div className="relative rounded-2xl p-6 sm:p-8 flex flex-col bg-card glow-neon">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon text-background font-display text-[10px] uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">
-              ★ Recommended
+          {/* VIP TIER */}
+          <div className="relative rounded-3xl border-2 border-neon bg-card/90 p-8 sm:p-10 flex flex-col shadow-[0_0_50px_rgba(0,255,136,0.15)] overflow-hidden md:scale-105 z-10">
+            <div className="absolute top-0 right-0 bg-neon text-background font-display text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-bl-xl">
+              Most Popular
             </div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-display text-xs uppercase tracking-widest text-neon border border-neon/40 bg-neon/10 rounded-full px-2.5 py-1">VIP</span>
+
+            <div className="mb-4 flex flex-wrap items-center gap-3 mt-4 sm:mt-0">
+              <span className="font-display text-xs uppercase tracking-widest text-neon border border-neon/40 bg-neon/10 rounded-full px-3 py-1.5 flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-neon opacity-75 animate-ping" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-neon" />
+                </span>
+                VIP Access
+              </span>
+              <span className="text-[11px] font-bold text-amber-score flex items-center gap-1 bg-amber-score/10 px-2.5 py-1 rounded-md border border-amber-score/20 animate-pulse">
+                🔥 Only 14 spots left
+              </span>
             </div>
-            <div className="mb-1">
-              <span className="font-display text-sm text-muted-foreground line-through">$35/mo</span>
+
+            <div className="mb-1 flex items-center gap-2">
+              <span className="line-through decoration-loss decoration-2 text-lg text-muted-foreground">$35.00</span>
+              <span className="text-xs font-bold text-neon bg-neon/10 px-2 py-0.5 rounded">SAVE 57%</span>
             </div>
-            <div className="flex items-baseline gap-2 mb-1">
-              <span className="font-display text-5xl font-bold text-gradient-cta">$15</span>
-              <span className="text-muted-foreground text-sm">/mo</span>
+
+            <div className="flex items-baseline gap-2 mb-8">
+              <span className="font-display text-6xl font-bold text-foreground tracking-tight">$15</span>
+              <span className="text-muted-foreground">/ month</span>
             </div>
-            <p className="text-xs text-amber-score mb-6">🔥 Launch price — limited spots</p>
+
             <button onClick={onUpgradeClick}
-              className="btn-gradient-cta block text-center rounded-xl font-display font-semibold py-3 hover:opacity-95 transition mb-6">
-              Upgrade to VIP →
+              className="btn-gradient-cta relative w-full block text-center rounded-xl font-display font-bold text-lg py-4 hover:scale-[1.02] transition-transform duration-300 mb-8 shadow-[0_0_20px_rgba(0,255,136,0.3)]">
+              Upgrade to VIP Now →
             </button>
-            <ul className="space-y-2.5 text-sm">
-              {vip.map((f) => (
-                <li key={f} className="flex items-start gap-2.5">
-                  <Check className="h-4 w-4 text-neon mt-0.5 shrink-0" /><span>{f}</span>
-                </li>
+
+            <div className="space-y-4 text-sm font-medium">
+              {vip.map((f, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="mt-0.5 rounded-full bg-neon/20 p-0.5 shrink-0">
+                    <Check className="h-3 w-3 text-neon" />
+                  </div>
+                  <span className={i === 0 ? "text-foreground font-bold" : "text-foreground/90"}>{f}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
-        <p className="text-center text-xs text-muted-foreground mt-8">
-          No lock-in. Cancel anytime. Track record publicly audited.
-        </p>
+        
+        <div className="mt-10 flex justify-center items-center gap-6 text-xs text-muted-foreground font-medium">
+          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-neon"/> Secure Checkout</span>
+          <span className="flex items-center gap-1.5"><X className="w-4 h-4"/> Cancel Anytime</span>
+        </div>
       </div>
     </section>
   );
