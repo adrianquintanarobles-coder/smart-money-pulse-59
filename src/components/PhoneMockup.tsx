@@ -6,8 +6,8 @@ export function PhoneMockup() {
       {/* Brillo de fondo verdecillo agresivo */}
       <div className="absolute inset-0 bg-neon/20 blur-[100px] -z-10 rounded-full" />
 
-      {/* Marco del Teléfono - Altura ajustada a 680px (Proporción Pro Max) */}
-      <div className="relative rounded-[2.5rem] border-[6px] border-[#101010] bg-[#0e1621] shadow-[0_0_40px_rgba(0,255,136,0.15)] overflow-hidden h-[680px] flex flex-col hover:scale-[1.02] transition-transform duration-500">
+      {/* Marco del Teléfono - Altura ajustada a 600px (Más compacto y realista) */}
+      <div className="relative rounded-[2.5rem] border-[6px] border-[#101010] bg-[#0e1621] shadow-[0_0_40px_rgba(0,255,136,0.15)] overflow-hidden h-[600px] flex flex-col hover:scale-[1.02] transition-transform duration-500">
         
         {/* Notch (Cámara superior) */}
         <div className="absolute top-0 inset-x-0 h-6 bg-[#101010] rounded-b-3xl w-[40%] mx-auto z-20" />
@@ -25,7 +25,7 @@ export function PhoneMockup() {
           </div>
         </div>
 
-        {/* Área del Chat de Telegram - Sin scroll y todo compactado */}
+        {/* Área del Chat de Telegram - Sin scroll y compacto */}
         <div className="flex-1 p-3 flex flex-col justify-end bg-[#0e1621] pb-5 relative overflow-hidden">
           
           {/* Mensaje Principal VIP */}
@@ -48,28 +48,17 @@ export function PhoneMockup() {
               <p className="text-electric">🔑 <strong>Wallet:</strong> 0x7a2...f9e4</p>
             </div>
 
-            {/* Separador sutil */}
-            <div className="h-px w-full bg-white/10 my-2" />
-            
-            <div className="space-y-1 mb-2.5">
-              <p>📄 <strong>El Arquitecto -- Ficha</strong></p>
-              <p>💰 <strong>Total invertido:</strong> $41,200</p>
-              <p>🎯 <strong>Tasa de acierto:</strong> <span className="text-neon font-bold">78% (42/54)</span></p>
-              <p className="truncate">📋 <strong>Mercados:</strong> BTC/USD, ETH ETF, Fed Rates</p>
-              <p>⚡ <strong>Outcome frecuente:</strong> Yes</p>
-            </div>
-
             <div className="h-px w-full bg-white/10 my-2" />
 
             <div className="mb-2">
-              <p className="leading-snug">📰 <strong>Contexto:</strong> <em>Claude AI detecta acumulación en wallets tras la FED. Setup de altísima probabilidad.</em></p>
+              <p className="leading-snug">📰 <strong>Contexto:</strong> <em>Claude AI detecta acumulación masiva tras la FED. Setup de altísima probabilidad.</em></p>
             </div>
 
             <p className="text-electric hover:underline cursor-pointer flex items-center gap-1 mb-1.5 mt-2">
               🔗 Ver mercado en Polymarket
             </p>
 
-            {/* Rich Link Preview simulando Polymarket - Imagen reducida para ahorrar espacio */}
+            {/* Rich Link Preview simulando Polymarket */}
             <div className="rounded-lg border border-black/30 bg-[#233040] overflow-hidden flex flex-col shadow-inner">
               <div className="h-[2px] w-full bg-blue-500" />
               <div className="p-2 pb-1.5">
@@ -81,7 +70,6 @@ export function PhoneMockup() {
                   Real-time prediction market for BTC...
                 </p>
               </div>
-              {/* Contenedor de la imagen más bajito (h-14 en vez de h-20) */}
               <div className="h-14 w-full bg-gradient-to-r from-orange-500 to-amber-500 relative flex items-center justify-center">
                  <div className="absolute inset-0 opacity-20 bg-[url('https://polymarket.com/favicon.ico')] bg-cover bg-center" />
                  <span className="text-white font-display font-black text-xl tracking-tighter shadow-black drop-shadow-md">₿ $100k</span>
