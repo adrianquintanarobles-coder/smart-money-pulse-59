@@ -11,27 +11,36 @@ import {
   ReferenceLine
 } from "recharts";
 
-// Generamos 90 días de datos con volatilidad realista
+// Generamos 90 días de datos con caída en medio y pico al final
 const generateData = () => {
   const data = [];
   const days = 90;
-  const start = 150;
-  const end = 14500;
-  // Calculamos el crecimiento diario necesario
-  const rate = Math.pow(end / start, 1 / days);
-
-  let current = start;
+  
   for (let i = 1; i <= days; i++) {
-    // Añadimos "ruido" de trading real (días buenos y días malos entre -3% y +5%)
-    const noise = 1 + (Math.random() * 0.08 - 0.035);
-    current = current * rate * noise;
-    
-    // Forzamos el aterrizaje final
-    if (i === days) current = end + (Math.random() * 200 - 100);
+    // 1. Base matemática exponencial pura (de 150 a 14575)
+    let val = 150 * Math.pow(14575 / 150, i / days);
+
+    // 2. Simulamos una caída fuerte en el medio (Market Correction)
+    if (i > 35 && i < 60) {
+      const dipCenter = 48; 
+      const distance = Math.abs(i - dipCenter);
+      if (distance < 15) {
+        const dipFactor = 1 - (0.3 * (1 - distance / 15));
+        val *= dipFactor;
+      }
+    }
+
+    // 3. Ruido diario (volatilidad ±3%)
+    const noise = 1 + (Math.random() * 0.06 - 0.03);
+    val *= noise;
+
+    // 4. FORZAMOS EL FINAL: En el punto más alto
+    if (i === days) val = 14575; 
+    if (i === days - 1) val = 13900 + (Math.random() * 150); 
 
     data.push({
-      day: `Día ${i}`,
-      balance: Math.max(150, Math.round(current)), // Que nunca baje del inicial visualmente
+      day: `Day ${i}`,
+      balance: Math.max(150, Math.round(val)),
     });
   }
   return data;
@@ -47,7 +56,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           ${payload[0].value.toLocaleString()}
         </p>
         <div className="flex items-center gap-1.5 text-[10px] text-neon/90 mt-2 pl-2 uppercase font-bold tracking-wide">
-          <Activity className="h-3 w-3" /> Rendimiento Acumulado
+          <Activity className="h-3 w-3" /> Cumulative Performance
         </div>
       </div>
     );
@@ -60,39 +69,38 @@ export function SignalTicker() {
   const finalBalance = data[data.length - 1].balance;
 
   return (
-    <div className="relative rounded-3xl border border-white/10 bg-card/40 backdrop-blur-md overflow-hidden transition-all hover:border-neon/30 shadow-2xl group">
+    <div className="rounded-3xl border border-white/10 bg-card/40 backdrop-blur-md overflow-hidden transition-all hover:border-neon/30 shadow-2xl">
       
-      {/* Insignias flotantes para dar aspecto de Terminal Pro */}
-      <div className="absolute top-[120px] left-8 hidden md:flex flex-col gap-3 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
-        <div className="flex items-center gap-2 bg-background/80 border border-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-display text-muted-foreground">
-          <Target className="h-3.5 w-3.5 text-amber-score" /> Win Rate: <span className="text-white font-bold">84.2%</span>
-        </div>
-        <div className="flex items-center gap-2 bg-background/80 border border-white/10 px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-display text-muted-foreground">
-          <Activity className="h-3.5 w-3.5 text-electric" /> Drawdown Max: <span className="text-white font-bold">-4.1%</span>
-        </div>
-      </div>
-
-      {/* Panel Superior */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between px-6 sm:px-8 py-6 sm:py-8 gap-4 border-b border-white/5 relative z-10">
+      {/* Upper Panel */}
+      <div className="flex flex-col md:flex-row md:items-start justify-between px-6 sm:px-8 py-6 sm:py-8 gap-6 border-b border-white/5">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <ShieldCheck className="h-4 w-4 text-muted-foreground" />
             <span className="font-display text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-              Backtest Certificado · 90 Días
+              Certified Backtest · 90 Days
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-black font-display text-white tracking-tight">
-            Estrategia <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon to-electric">Compound</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon to-electric text-gradient-cta">Compound</span> Strategy
           </h2>
           <p className="text-sm text-muted-foreground flex items-center gap-2 mt-3">
-            <Users className="h-4 w-4 text-electric/80" /> Evolución promedio de 100 carteras Whale VIP
+            <Users className="h-4 w-4 text-electric/80" /> Average performance of 100 Whale VIP accounts
           </p>
+          
+          <div className="flex flex-wrap items-center gap-3 mt-4">
+            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-lg text-xs font-display text-muted-foreground">
+              <Target className="h-3.5 w-3.5 text-amber-score" /> Win Rate: <span className="text-white font-bold">84.2%</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-lg text-xs font-display text-muted-foreground">
+              <Activity className="h-3.5 w-3.5 text-electric" /> Max Drawdown: <span className="text-white font-bold">-4.1%</span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col items-end">
-          <div className="bg-[#0a0a0a]/60 border border-white/10 rounded-2xl p-4 md:text-right min-w-[220px] shadow-inner backdrop-blur-sm">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex justify-end items-center gap-1.5">
-              Capital Final <ArrowUpRight className="h-3 w-3 text-neon" />
+        <div className="flex flex-col items-start md:items-end w-full md:w-auto">
+          <div className="bg-[#0a0a0a]/60 border border-white/10 rounded-2xl p-4 w-full md:w-auto md:text-right shadow-inner backdrop-blur-sm">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex justify-start md:justify-end items-center gap-1.5">
+              Final Capital <ArrowUpRight className="h-3 w-3 text-neon" />
             </p>
             <div className="text-4xl md:text-5xl font-black text-white font-display tracking-tighter">
               ${finalBalance.toLocaleString()}
@@ -104,17 +112,16 @@ export function SignalTicker() {
         </div>
       </div>
 
-      {/* Área del Gráfico */}
+      {/* Graph Area */}
       <div className="px-0 pb-2 h-[350px] md:h-[400px] w-full mt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="neonGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#00ff88" stopOpacity={0.6} />
                 <stop offset="50%" stopColor="#00ff88" stopOpacity={0.1} />
                 <stop offset="100%" stopColor="#00ff88" stopOpacity={0} />
               </linearGradient>
-              {/* Filtro para el brillo (glow) de la línea */}
               <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="6" result="blur" />
                 <feMerge>
@@ -133,7 +140,7 @@ export function SignalTicker() {
               tickLine={false} 
               axisLine={false} 
               dy={10}
-              tickFormatter={(val, i) => i % 15 === 0 ? val : ''} // Muestra etiquetas cada 15 días para no saturar
+              tickFormatter={(val, i) => (i === 0 || i % 15 !== 0) ? '' : val} 
               fontFamily="var(--font-display)"
             />
             
@@ -144,17 +151,17 @@ export function SignalTicker() {
               cursor={{ stroke: 'rgba(0, 255, 136, 0.5)', strokeWidth: 2, strokeDasharray: '4 4' }} 
             />
 
-            {/* Línea de referencia del Capital Inicial */}
             <ReferenceLine 
               y={150} 
               stroke="rgba(255,255,255,0.2)" 
               strokeDasharray="3 3" 
               label={{ 
-                value: 'CAPITAL INICIAL: $150', 
+                value: 'INITIAL CAPITAL: $150', 
                 position: 'insideTopLeft', 
                 fill: 'rgba(255,255,255,0.4)', 
                 fontSize: 10, 
-                offset: 15 
+                dy: -10,
+                dx: 20
               }} 
             />
             
@@ -164,7 +171,7 @@ export function SignalTicker() {
               stroke="#00ff88"
               strokeWidth={3}
               fill="url(#neonGradient)"
-              filter="url(#glow)" // Aplicamos el brillo aquí
+              filter="url(#glow)"
               animationDuration={3000}
               animationBegin={200}
               activeDot={{ r: 7, fill: "#0a0a0a", stroke: "#00ff88", strokeWidth: 3 }}
@@ -173,16 +180,16 @@ export function SignalTicker() {
         </ResponsiveContainer>
       </div>
 
-      {/* Pie del componente */}
+      {/* Footer Labels */}
       <div className="bg-black/20 border-t border-white/5 px-4 sm:px-8 py-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-           <div className="h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_5px_#00ff88]" /> Interés Compuesto
+           <div className="h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_5px_#00ff88]" /> Compound Interest
         </span>
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-           <div className="h-1.5 w-1.5 rounded-full bg-electric shadow-[0_0_5px_#00e5ff]" /> Gestión de Riesgo
+           <div className="h-1.5 w-1.5 rounded-full bg-electric shadow-[0_0_5px_#00e5ff]" /> Risk Management
         </span>
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-           <div className="h-1.5 w-1.5 rounded-full bg-amber-score shadow-[0_0_5px_#ffab00]" /> Copia Automática
+           <div className="h-1.5 w-1.5 rounded-full bg-amber-score shadow-[0_0_5px_#ffab00]" /> Automatic Copying
         </span>
       </div>
     </div>
