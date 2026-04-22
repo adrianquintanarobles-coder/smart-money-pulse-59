@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import { Users, ArrowUpRight, ShieldCheck, Activity, Target } from "lucide-react";
+import { Users, ArrowUpRight, ShieldCheck, Activity, Target, Bot } from "lucide-react";
 import {
   AreaChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -14,28 +15,30 @@ import {
 const generateData = () => {
   const data = [];
   const days = 90;
+  let retailBalance = 150; // Balance del trader promedio (benchmark)
   
   for (let i = 1; i <= days; i++) {
+    // 1. Bot Balance (Curva Exponencial)
     let val = 150 * Math.pow(14575 / 150, i / days);
-
     if (i > 35 && i < 60) {
       const dipCenter = 48; 
       const distance = Math.abs(i - dipCenter);
       if (distance < 15) {
-        const dipFactor = 1 - (0.3 * (1 - distance / 15));
-        val *= dipFactor;
+        val *= 1 - (0.3 * (1 - distance / 15));
       }
     }
-
-    const noise = 1 + (Math.random() * 0.06 - 0.03);
-    val *= noise;
-
+    val *= 1 + (Math.random() * 0.06 - 0.03);
     if (i === days) val = 14575; 
     if (i === days - 1) val = 13900 + (Math.random() * 150); 
+
+    // 2. Retail Benchmark (Crece muy lento, a veces pierde)
+    retailBalance += (Math.random() * 12 - 4); // Gana poco, a veces pierde
+    if (retailBalance < 50) retailBalance = 50;
 
     data.push({
       day: `Day ${i}`,
       balance: Math.max(150, Math.round(val)),
+      benchmark: Math.round(retailBalance),
     });
   }
   return data;
@@ -46,12 +49,21 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-[#0a0a0a]/95 border border-neon/50 p-4 rounded-xl shadow-[0_0_25px_rgba(0,255,136,0.25)] backdrop-blur-xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-1 h-full bg-neon" />
-        <p className="text-muted-foreground text-[10px] uppercase tracking-widest mb-1 font-display pl-2">{label}</p>
-        <p className="text-white font-black text-2xl font-display pl-2">
-          ${payload[0].value.toLocaleString()}
-        </p>
-        <div className="flex items-center gap-1.5 text-[10px] text-neon/90 mt-2 pl-2 uppercase font-bold tracking-wide">
-          <Activity className="h-3 w-3" /> Cumulative Performance
+        <p className="text-muted-foreground text-[10px] uppercase tracking-widest mb-2 font-display pl-2">{label}</p>
+        
+        <div className="pl-2 space-y-2">
+          <div>
+            <p className="text-[10px] text-neon uppercase tracking-wide flex items-center gap-1"><Bot className="w-3 h-3"/> Bot Strategy</p>
+            <p className="text-white font-black text-2xl font-display">
+              ${payload[0].value.toLocaleString()}
+            </p>
+          </div>
+          <div className="border-t border-white/10 pt-2">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Avg Retail Trader</p>
+            <p className="text-muted-foreground font-bold text-sm font-display">
+              ${payload[1]?.value.toLocaleString()}
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -92,7 +104,7 @@ export function SignalTicker() {
           </div>
         </div>
 
-        <div className="flex flex-col items-start md:items-end w-full md:w-auto">
+        <div className="flex flex-col items-start md:items-end w-full md:w-auto z-10">
           <div className="bg-[#0a0a0a]/60 border border-white/10 rounded-2xl p-4 w-full md:w-auto md:text-right shadow-inner backdrop-blur-sm">
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex justify-start md:justify-end items-center gap-1.5">
               Final Capital <ArrowUpRight className="h-3 w-3 text-neon" />
@@ -108,9 +120,32 @@ export function SignalTicker() {
       </div>
 
       {/* Graph Area */}
-      <div className="px-0 pb-2 h-[350px] md:h-[400px] w-full mt-4">
+      <div className="px-0 pb-2 h-[350px] md:h-[400px] w-full mt-4 relative">
+        
+        {/* Anotaciones Flotantes para rellenar el vacío (Solo en Desktop) */}
+        <div className="absolute top-[15%] left-[20%] hidden md:block z-10">
+          <div className="flex flex-col items-start gap-1">
+            <div className="bg-white/5 border border-white/10 backdrop-blur-md px-3 py-2 rounded-lg text-xs text-muted-foreground font-display shadow-xl">
+              <span className="text-white font-bold block mb-0.5">Phase 1: Accumulation</span>
+              AI identifying highly profitable wallets.
+            </div>
+            <div className="h-12 w-px bg-gradient-to-b from-white/20 to-transparent ml-4" />
+          </div>
+        </div>
+
+        <div className="absolute top-[40%] right-[35%] hidden md:block z-10">
+          <div className="flex flex-col items-start gap-1">
+            <div className="bg-neon/10 border border-neon/20 backdrop-blur-md px-3 py-2 rounded-lg text-xs text-neon font-display shadow-xl">
+              <span className="font-bold block mb-0.5 flex items-center gap-1">
+                <Activity className="w-3 h-3" /> Phase 2: Exponential Breakout
+              </span>
+              Compounding effect multiplying gains.
+            </div>
+          </div>
+        </div>
+
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="neonGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#00ff88" stopOpacity={0.6} />
@@ -126,7 +161,8 @@ export function SignalTicker() {
               </filter>
             </defs>
             
-            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff" opacity={0.04} vertical={false} />
+            {/* Re-activamos la cuadrícula horizontal para dar estructura */}
+            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff" opacity={0.06} vertical={false} horizontal={true} />
             
             <XAxis 
               dataKey="day" 
@@ -139,14 +175,23 @@ export function SignalTicker() {
               fontFamily="var(--font-display)"
             />
             
-            <YAxis hide={true} domain={['dataMin - 50', 'dataMax + 500']} />
+            {/* Activamos el Eje Y a la derecha para rellenar visualmente */}
+            <YAxis 
+              orientation="right" 
+              stroke="#444" 
+              fontSize={10}
+              tickLine={false} 
+              axisLine={false}
+              tickFormatter={(val) => val === 0 ? '' : `$${val >= 1000 ? (val/1000).toFixed(0) + 'k' : val}`}
+              fontFamily="var(--font-display)"
+              domain={['dataMin - 50', 'dataMax + 500']}
+            />
             
             <Tooltip 
               content={<CustomTooltip />} 
               cursor={{ stroke: 'rgba(0, 255, 136, 0.5)', strokeWidth: 2, strokeDasharray: '4 4' }} 
             />
 
-            {/* Etiqueta movida hacia arriba para evitar el solapamiento */}
             <ReferenceLine 
               y={150} 
               stroke="rgba(255,255,255,0.15)" 
@@ -155,13 +200,25 @@ export function SignalTicker() {
                 value: 'INITIAL: $150', 
                 position: 'insideTopLeft', 
                 fill: '#999999', 
-                fontSize: 11, 
-                dy: -25, // La eleva por encima de la curva verde
-                dx: 30,  // La desplaza a la derecha
+                fontSize: 10, 
+                dy: -15,
+                dx: 30,
                 fontFamily: 'var(--font-display)'
               }} 
             />
             
+            {/* LÍNEA DE BENCHMARK (Retail Trader) */}
+            <Line 
+              type="monotone" 
+              dataKey="benchmark" 
+              stroke="#555555" 
+              strokeWidth={2} 
+              strokeDasharray="4 4" 
+              dot={false}
+              isAnimationActive={true}
+              animationDuration={3000}
+            />
+
             <Area
               type="monotone"
               dataKey="balance"
@@ -177,7 +234,7 @@ export function SignalTicker() {
         </ResponsiveContainer>
       </div>
 
-      {/* Footer Metrics - Ahora con información esencial */}
+      {/* Footer Metrics */}
       <div className="bg-black/20 border-t border-white/5 px-6 sm:px-8 py-5 flex flex-wrap items-center justify-between sm:justify-center gap-x-12 gap-y-4">
         <div className="flex flex-col">
           <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Total Trades</span>
@@ -192,8 +249,10 @@ export function SignalTicker() {
           <span className="text-sm font-display text-white font-bold">2.4x</span>
         </div>
         <div className="flex flex-col hidden sm:flex">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Market Correlation</span>
-          <span className="text-sm font-display text-white font-bold">Low (0.12)</span>
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#555] inline-block"/> Retail Benchmark
+          </span>
+          <span className="text-sm font-display text-muted-foreground font-bold">+$214 Avg</span>
         </div>
       </div>
     </div>
