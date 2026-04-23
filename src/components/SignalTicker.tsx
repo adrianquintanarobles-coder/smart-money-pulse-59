@@ -10,27 +10,32 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-// 1. Generamos los datos simulados para 60 DÍAS
+// 1. Matemáticas corregidas: Curva exponencial perfecta de 60 días
 const generateData = () => {
-  let balance = 150;
   const data = [];
-  
-  for (let i = 1; i <= 60; i++) {
-    // Curva de interés compuesto (crecimiento más explosivo al final)
-    // Para hacer x100 en 60 días necesitamos aprox un 8% diario compuesto.
-    const baseGrowth = 1.08; 
-    // Añadimos ruido para que parezca un gráfico de trading real, no una línea matemática perfecta
-    const noise = (Math.random() * 0.12) - 0.04; 
+  const start = 150;
+  const end = 14575;
+  const days = 60;
+
+  for (let i = 1; i <= days; i++) {
+    // Calculamos el progreso del 0 al 1
+    const t = i / days;
     
-    balance = balance * (baseGrowth + noise);
-    
-    // Forzamos el último día para que clave la cifra de la imagen
-    if (i === 60) balance = 14575;
+    // Fórmula de curva exponencial exacta desde 'start' hasta 'end'
+    const idealBalance = start * Math.pow(end / start, t);
+
+    // Añadimos un ruido mínimo (+- 2%) solo visual, para que no sea una línea robótica
+    const noise = 1 + ((Math.random() * 0.04) - 0.02);
+    let balance = idealBalance * noise;
+
+    // Forzamos principio y final exactos para que no haya saltos
+    if (i === 1) balance = start;
+    if (i === days) balance = end;
 
     data.push({
       dayNumber: i,
       dayLabel: `Day ${i}`,
-      balance: Math.max(150, Math.round(balance)), // Nunca baja de 150
+      balance: Math.max(start, Math.round(balance)),
     });
   }
   return data;
@@ -88,7 +93,7 @@ export function SignalTicker() {
         </div>
 
         {/* Info Derecha (Caja de capital final) */}
-        <div className="bg-[#111820] border border-white/10 rounded-xl p-5 w-full sm:w-auto shadow-inner">
+        <div className="bg-[#111820] border border-white/10 rounded-xl p-5 w-full sm:w-auto shadow-inner z-10 relative">
           <div className="flex items-center justify-between sm:justify-end gap-6 mb-1">
             <span className="text-[#8b9bb4] text-[10px] uppercase tracking-widest font-bold flex items-center gap-1">
               Final Capital <ArrowUpRight className="w-3 h-3 text-neon" />
@@ -146,7 +151,6 @@ export function SignalTicker() {
               dy={10}
               interval="preserveStartEnd"
               tickFormatter={(val) => {
-                // Solo mostramos días clave para no ensuciar
                 if (['Day 15', 'Day 30', 'Day 45', 'Day 60'].includes(val)) return val;
                 return '';
               }}
