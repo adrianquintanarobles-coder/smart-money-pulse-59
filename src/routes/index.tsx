@@ -188,7 +188,7 @@ function DashboardPreview() {
   );
 }
 
-/* ── LIVE STATS (CON TRUCO DE VENTAS) ────────────────── */
+/* ── LIVE STATS (EFECTO BORDE GIRATORIO) ────────────────── */
 function FormattedVolume({ volume }: { volume: number }) {
   if (volume >= 1000000) {
     return <>${(volume / 1000000).toFixed(2)}M</>;
@@ -258,19 +258,33 @@ function LiveStats() {
             </span>
           }
         />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-5xl mx-auto">
+        
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-5xl mx-auto mt-8">
           {stats.map((s, i) => (
-            <div key={i} className="frosted rounded-2xl p-5 sm:p-7 text-center overflow-hidden relative">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-neon/15 overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-transparent via-neon to-transparent stat-bar-shimmer"
-                  style={{ animationDelay: `${i * 0.4}s` }} />
+            /* AQUÍ ESTÁ LA MAGIA DEL BORDE GIRATORIO */
+            <div key={i} className="relative rounded-2xl text-center overflow-hidden group p-[1px]">
+              
+              {/* 1. El gradiente cónico que da vueltas (solo visible donde hay hueco) */}
+              <div
+                className="absolute inset-[-150%] animate-spin opacity-50 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: 'conic-gradient(from 0deg, transparent 75%, #00ff88 100%)',
+                  animationDuration: '4s',
+                  animationDelay: `${i * -1}s` // Desfase para que no giren como robots sincronizados
+                }}
+              />
+              
+              {/* 2. La capa interna oscura que hace de 'tapa', dejando 1px de margen */}
+              <div className="relative z-10 h-full w-full rounded-[15px] bg-[#0c1219]/95 p-5 sm:p-7 flex flex-col justify-center shadow-2xl backdrop-blur-xl">
+                <div className="font-display text-3xl sm:text-5xl font-bold text-gradient-cta tabular-nums">{s.value}</div>
+                <div className="mt-2 text-xs sm:text-sm text-muted-foreground">{s.label}</div>
               </div>
-              <div className="font-display text-3xl sm:text-5xl font-bold text-gradient-cta tabular-nums">{s.value}</div>
-              <div className="mt-2 text-xs sm:text-sm text-muted-foreground">{s.label}</div>
+              
             </div>
           ))}
         </div>
-        <p className="text-center text-xs text-muted-foreground mt-6 italic">
+        
+        <p className="text-center text-xs text-muted-foreground mt-8 italic">
           *Backtest performance based on historical Polymarket resolutions.
         </p>
       </div>
