@@ -1,70 +1,50 @@
 import { useMemo } from "react";
-import { Users, ArrowUpRight, ShieldCheck, Activity, Target, Bot } from "lucide-react";
+import { ShieldCheck, Users, Target, Activity, ArrowUpRight } from "lucide-react";
 import {
   AreaChart,
   Area,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-  ReferenceLine
+  ResponsiveContainer
 } from "recharts";
 
+// 1. Generamos los datos simulados para 60 DÍAS
 const generateData = () => {
+  let balance = 150;
   const data = [];
-  const days = 90;
-  let retailBalance = 150; // Balance del trader promedio (benchmark)
   
-  for (let i = 1; i <= days; i++) {
-    // 1. Bot Balance (Curva Exponencial)
-    let val = 150 * Math.pow(14575 / 150, i / days);
-    if (i > 35 && i < 60) {
-      const dipCenter = 48; 
-      const distance = Math.abs(i - dipCenter);
-      if (distance < 15) {
-        val *= 1 - (0.3 * (1 - distance / 15));
-      }
-    }
-    val *= 1 + (Math.random() * 0.06 - 0.03);
-    if (i === days) val = 14575; 
-    if (i === days - 1) val = 13900 + (Math.random() * 150); 
-
-    // 2. Retail Benchmark (Crece muy lento, a veces pierde)
-    retailBalance += (Math.random() * 12 - 4); // Gana poco, a veces pierde
-    if (retailBalance < 50) retailBalance = 50;
+  for (let i = 1; i <= 60; i++) {
+    // Curva de interés compuesto (crecimiento más explosivo al final)
+    // Para hacer x100 en 60 días necesitamos aprox un 8% diario compuesto.
+    const baseGrowth = 1.08; 
+    // Añadimos ruido para que parezca un gráfico de trading real, no una línea matemática perfecta
+    const noise = (Math.random() * 0.12) - 0.04; 
+    
+    balance = balance * (baseGrowth + noise);
+    
+    // Forzamos el último día para que clave la cifra de la imagen
+    if (i === 60) balance = 14575;
 
     data.push({
-      day: `Day ${i}`,
-      balance: Math.max(150, Math.round(val)),
-      benchmark: Math.round(retailBalance),
+      dayNumber: i,
+      dayLabel: `Day ${i}`,
+      balance: Math.max(150, Math.round(balance)), // Nunca baja de 150
     });
   }
   return data;
 };
 
+// Tooltip estilo Terminal para hacer match con el diseño
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#0a0a0a]/95 border border-neon/50 p-4 rounded-xl shadow-[0_0_25px_rgba(0,255,136,0.25)] backdrop-blur-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-1 h-full bg-neon" />
-        <p className="text-muted-foreground text-[10px] uppercase tracking-widest mb-2 font-display pl-2">{label}</p>
-        
-        <div className="pl-2 space-y-2">
-          <div>
-            <p className="text-[10px] text-neon uppercase tracking-wide flex items-center gap-1"><Bot className="w-3 h-3"/> Bot Strategy</p>
-            <p className="text-white font-black text-2xl font-display">
-              ${payload[0].value.toLocaleString()}
-            </p>
-          </div>
-          <div className="border-t border-white/10 pt-2">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Avg Retail Trader</p>
-            <p className="text-muted-foreground font-bold text-sm font-display">
-              ${payload[1]?.value.toLocaleString()}
-            </p>
-          </div>
-        </div>
+      <div className="bg-[#0b1015]/95 border border-white/10 p-3 rounded-lg shadow-2xl backdrop-blur-md">
+        <p className="text-muted-foreground text-[11px] uppercase tracking-wider mb-1 font-display">{label}</p>
+        <p className="text-white font-bold text-lg font-display">
+          ${payload[0].value.toLocaleString()}
+        </p>
       </div>
     );
   }
@@ -73,188 +53,156 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function SignalTicker() {
   const data = useMemo(() => generateData(), []);
-  const finalBalance = data[data.length - 1].balance;
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-card/40 backdrop-blur-md overflow-hidden transition-all hover:border-neon/30 shadow-2xl">
+    <div className="w-full rounded-2xl border border-white/10 bg-[#0a0f16] shadow-[0_0_50px_rgba(0,255,136,0.05)] overflow-hidden font-display relative">
       
-      {/* Upper Panel */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between px-6 sm:px-8 py-6 sm:py-8 gap-6 border-b border-white/5">
+      {/* ── CABECERA ── */}
+      <div className="p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-white/5">
+        
+        {/* Info Izquierda */}
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <ShieldCheck className="h-4 w-4 text-muted-foreground" />
-            <span className="font-display text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-              Certified Backtest · 90 Days
-            </span>
+          <div className="flex items-center gap-2 text-muted-foreground mb-3 text-[11px] uppercase tracking-widest font-semibold">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Certified Backtest • 60 Days
           </div>
-          <h2 className="text-3xl md:text-5xl font-black font-display text-white tracking-tight">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon to-electric text-gradient-cta">Compound</span> Strategy
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-2">
+            <span className="text-[#00d2ff]">Compound</span> <span className="text-white">Strategy</span>
           </h2>
-          <p className="text-sm text-muted-foreground flex items-center gap-2 mt-3">
-            <Users className="h-4 w-4 text-electric/80" /> Average performance of 100 Whale VIP accounts
-          </p>
-          
-          <div className="flex flex-wrap items-center gap-3 mt-4">
-            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-lg text-xs font-display text-muted-foreground">
-              <Target className="h-3.5 w-3.5 text-amber-score" /> Win Rate: <span className="text-white font-bold">84.2%</span>
+          <div className="flex items-center gap-2 text-[#8b9bb4] text-sm mb-5">
+            <Users className="w-4 h-4" />
+            Average performance of 100 Whale VIP accounts
+          </div>
+
+          {/* Badges */}
+          <div className="flex gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white font-medium">
+              <Target className="w-3.5 h-3.5 text-amber-500" />
+              Win Rate: <span className="font-bold">84.2%</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-lg text-xs font-display text-muted-foreground">
-              <Activity className="h-3.5 w-3.5 text-electric" /> Max Drawdown: <span className="text-white font-bold">-4.1%</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white font-medium">
+              <Activity className="w-3.5 h-3.5 text-[#00d2ff]" />
+              Max Drawdown: <span className="font-bold">-4.1%</span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col items-start md:items-end w-full md:w-auto z-10">
-          <div className="bg-[#0a0a0a]/60 border border-white/10 rounded-2xl p-4 w-full md:w-auto md:text-right shadow-inner backdrop-blur-sm">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex justify-start md:justify-end items-center gap-1.5">
-              Final Capital <ArrowUpRight className="h-3 w-3 text-neon" />
-            </p>
-            <div className="text-4xl md:text-5xl font-black text-white font-display tracking-tighter">
-              ${finalBalance.toLocaleString()}
-            </div>
-            <div className="mt-2 text-xs font-display text-neon bg-neon/10 border border-neon/20 px-2 py-1 rounded-md inline-block">
-              +{(finalBalance / 150 * 100).toFixed(0)}% ROI
-            </div>
+        {/* Info Derecha (Caja de capital final) */}
+        <div className="bg-[#111820] border border-white/10 rounded-xl p-5 w-full sm:w-auto shadow-inner">
+          <div className="flex items-center justify-between sm:justify-end gap-6 mb-1">
+            <span className="text-[#8b9bb4] text-[10px] uppercase tracking-widest font-bold flex items-center gap-1">
+              Final Capital <ArrowUpRight className="w-3 h-3 text-neon" />
+            </span>
+          </div>
+          <div className="text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">
+            $14,575
+          </div>
+          <div className="inline-block px-2.5 py-1 rounded bg-neon/10 border border-neon/20 text-neon text-xs font-bold tracking-wide">
+            +9717% ROI
           </div>
         </div>
       </div>
 
-      {/* Graph Area */}
-      <div className="px-0 pb-2 h-[350px] md:h-[400px] w-full mt-4 relative">
+      {/* ── GRÁFICO ── */}
+      <div className="relative h-[350px] w-full pt-6">
         
-        {/* Anotaciones Flotantes para rellenar el vacío (Solo en Desktop) */}
-        <div className="absolute top-[15%] left-[20%] hidden md:block z-10">
-          <div className="flex flex-col items-start gap-1">
-            <div className="bg-white/5 border border-white/10 backdrop-blur-md px-3 py-2 rounded-lg text-xs text-muted-foreground font-display shadow-xl">
-              <span className="text-white font-bold block mb-0.5">Phase 1: Accumulation</span>
-              AI identifying highly profitable wallets.
-            </div>
-            <div className="h-12 w-px bg-gradient-to-b from-white/20 to-transparent ml-4" />
+        {/* Etiquetas Flotantes (Cuentan la historia) */}
+        <div className="absolute top-[20%] left-[15%] z-10 hidden sm:block">
+          <div className="bg-[#151b23]/90 border border-white/10 rounded-lg p-3 shadow-xl backdrop-blur-sm">
+            <p className="text-white font-bold text-xs mb-0.5">Phase 1: Accumulation</p>
+            <p className="text-[#8b9bb4] text-[11px]">AI identifying highly profitable wallets.</p>
+          </div>
+          <div className="h-10 w-px bg-white/20 mx-auto mt-1" />
+        </div>
+
+        <div className="absolute top-[50%] left-[45%] z-10 hidden sm:block">
+          <div className="bg-neon/10 border border-neon/30 rounded-lg p-3 shadow-[0_0_20px_rgba(0,255,136,0.1)] backdrop-blur-sm">
+            <p className="text-neon font-bold text-xs mb-0.5 flex items-center gap-1">
+              <Activity className="w-3 h-3"/> Phase 2: Exponential Breakout
+            </p>
+            <p className="text-neon/70 text-[11px]">Compounding effect multiplying gains.</p>
           </div>
         </div>
 
-        <div className="absolute top-[40%] right-[35%] hidden md:block z-10">
-          <div className="flex flex-col items-start gap-1">
-            <div className="bg-neon/10 border border-neon/20 backdrop-blur-md px-3 py-2 rounded-lg text-xs text-neon font-display shadow-xl">
-              <span className="font-bold block mb-0.5 flex items-center gap-1">
-                <Activity className="w-3 h-3" /> Phase 2: Exponential Breakout
-              </span>
-              Compounding effect multiplying gains.
-            </div>
-          </div>
-        </div>
-
+        {/* Renderizado de Recharts */}
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id="neonGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#00ff88" stopOpacity={0.6} />
-                <stop offset="50%" stopColor="#00ff88" stopOpacity={0.1} />
-                <stop offset="100%" stopColor="#00ff88" stopOpacity={0} />
+              <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#00ff88" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#00ff88" stopOpacity={0} />
               </linearGradient>
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="6" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
             </defs>
             
-            {/* Re-activamos la cuadrícula horizontal para dar estructura */}
-            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff" opacity={0.06} vertical={false} horizontal={true} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} opacity={0.5} />
             
+            {/* Eje X adaptado a 60 días */}
             <XAxis 
-              dataKey="day" 
+              dataKey="dayLabel" 
               stroke="#555" 
-              fontSize={10} 
-              tickLine={false} 
-              axisLine={false} 
-              dy={10}
-              tickFormatter={(val, i) => (i === 0 || i % 15 !== 0) ? '' : val} 
-              fontFamily="var(--font-display)"
-            />
-            
-            {/* Activamos el Eje Y a la derecha para rellenar visualmente */}
-            <YAxis 
-              orientation="right" 
-              stroke="#444" 
               fontSize={10}
-              tickLine={false} 
+              tickLine={false}
               axisLine={false}
-              tickFormatter={(val) => val === 0 ? '' : `$${val >= 1000 ? (val/1000).toFixed(0) + 'k' : val}`}
-              fontFamily="var(--font-display)"
-              domain={['dataMin - 50', 'dataMax + 500']}
+              dy={10}
+              interval="preserveStartEnd"
+              tickFormatter={(val) => {
+                // Solo mostramos días clave para no ensuciar
+                if (['Day 15', 'Day 30', 'Day 45', 'Day 60'].includes(val)) return val;
+                return '';
+              }}
             />
             
-            <Tooltip 
-              content={<CustomTooltip />} 
-              cursor={{ stroke: 'rgba(0, 255, 136, 0.5)', strokeWidth: 2, strokeDasharray: '4 4' }} 
-            />
-
-            <ReferenceLine 
-              y={150} 
-              stroke="rgba(255,255,255,0.15)" 
-              strokeDasharray="3 3" 
-              label={{ 
-                value: 'INITIAL: $150', 
-                position: 'insideTopLeft', 
-                fill: '#999999', 
-                fontSize: 10, 
-                dy: -15,
-                dx: 30,
-                fontFamily: 'var(--font-display)'
-              }} 
+            <YAxis 
+              stroke="#555" 
+              fontSize={10}
+              tickLine={false}
+              axisLine={false}
+              orientation="right"
+              dx={10}
+              tickFormatter={(value) => `$${value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value}`}
             />
             
-            {/* LÍNEA DE BENCHMARK (Retail Trader) */}
-            <Line 
-              type="monotone" 
-              dataKey="benchmark" 
-              stroke="#555555" 
-              strokeWidth={2} 
-              strokeDasharray="4 4" 
-              dot={false}
-              isAnimationActive={true}
-              animationDuration={3000}
-            />
-
+            <Tooltip content={<CustomTooltip />} />
+            
             <Area
               type="monotone"
               dataKey="balance"
               stroke="#00ff88"
               strokeWidth={3}
-              fill="url(#neonGradient)"
-              filter="url(#glow)"
-              animationDuration={3000}
-              animationBegin={200}
-              activeDot={{ r: 7, fill: "#0a0a0a", stroke: "#00ff88", strokeWidth: 3 }}
+              fillOpacity={1}
+              fill="url(#colorBalance)"
             />
           </AreaChart>
         </ResponsiveContainer>
+
+        {/* Etiqueta Initial Balance */}
+        <div className="absolute bottom-6 left-6 text-[10px] text-neon font-bold uppercase tracking-wider hidden sm:block">
+          Initial: $150
+        </div>
       </div>
 
-      {/* Footer Metrics */}
-      <div className="bg-black/20 border-t border-white/5 px-6 sm:px-8 py-5 flex flex-wrap items-center justify-between sm:justify-center gap-x-12 gap-y-4">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Total Trades</span>
-          <span className="text-sm font-display text-white font-bold">1,240</span>
+      {/* ── FOOTER STATS ── */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-white/5 bg-[#080d12]">
+        <div className="p-5 border-b sm:border-b-0 sm:border-r border-white/5">
+          <p className="text-[#8b9bb4] text-[10px] uppercase tracking-widest font-bold mb-1">Total Trades</p>
+          <p className="text-white font-bold text-lg">1,240</p>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Avg. Holding Time</span>
-          <span className="text-sm font-display text-white font-bold">3.5 Hours</span>
+        <div className="p-5 border-b sm:border-b-0 sm:border-r border-white/5">
+          <p className="text-[#8b9bb4] text-[10px] uppercase tracking-widest font-bold mb-1">Avg. Holding Time</p>
+          <p className="text-white font-bold text-lg">3.5 Hours</p>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Profit Factor</span>
-          <span className="text-sm font-display text-white font-bold">2.4x</span>
+        <div className="p-5 border-r border-white/5">
+          <p className="text-[#8b9bb4] text-[10px] uppercase tracking-widest font-bold mb-1">Profit Factor</p>
+          <p className="text-white font-bold text-lg">2.4x</p>
         </div>
-        <div className="flex flex-col hidden sm:flex">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#555] inline-block"/> Retail Benchmark
-          </span>
-          <span className="text-sm font-display text-muted-foreground font-bold">+$214 Avg</span>
+        <div className="p-5">
+          <p className="text-[#8b9bb4] text-[10px] uppercase tracking-widest font-bold mb-1 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 bg-gray-500 rounded-full" /> Retail Benchmark
+          </p>
+          <p className="text-white/60 font-bold text-lg">+$214 Avg</p>
         </div>
       </div>
+
     </div>
   );
 }
