@@ -10,7 +10,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-// 1. Matemáticas corregidas: Curva exponencial perfecta de 60 días
+// 1. Matemáticas de experto: Curva con volatilidad, drawdowns y pumps reales
 const generateData = () => {
   const data = [];
   const start = 150;
@@ -18,30 +18,39 @@ const generateData = () => {
   const days = 60;
 
   for (let i = 1; i <= days; i++) {
-    // Calculamos el progreso del 0 al 1
     const t = i / days;
     
-    // Fórmula de curva exponencial exacta desde 'start' hasta 'end'
+    // Base exponencial
     const idealBalance = start * Math.pow(end / start, t);
 
-    // Añadimos un ruido mínimo (+- 2%) solo visual, para que no sea una línea robótica
-    const noise = 1 + ((Math.random() * 0.04) - 0.02);
-    let balance = idealBalance * noise;
+    // Simulamos rachas de pérdidas y ganancias (ciclos de mercado)
+    // Usamos ondas senoidales para crear "valles" y "picos" creíbles
+    const trendCycle = Math.sin(t * Math.PI * 3.5) * 0.25; // 3.5 ciclos de subidas/bajadas (hasta +-25%)
+    const dailyNoise = (Math.random() * 0.15) - 0.075; // Ruido diario del +-7.5%
+    
+    // Suavizamos la volatilidad justo en el día 1 y el día 60 para que conecte perfecto
+    const startTaper = Math.min(1, i / 5);
+    const endTaper = Math.min(1, (days - i) / 5);
+    const taper = startTaper * endTaper;
+    
+    // Aplicamos la volatilidad a la base exponencial
+    let balance = idealBalance * (1 + (trendCycle + dailyNoise) * taper);
 
-    // Forzamos principio y final exactos para que no haya saltos
+    // Forzamos principio y final exactos
     if (i === 1) balance = start;
     if (i === days) balance = end;
 
     data.push({
       dayNumber: i,
       dayLabel: `Day ${i}`,
-      balance: Math.max(start, Math.round(balance)),
+      // Math.max para asegurar que en una racha mala nunca baje de 50 pavos
+      balance: Math.max(50, Math.round(balance)), 
     });
   }
   return data;
 };
 
-// Tooltip estilo Terminal para hacer match con el diseño
+// Tooltip estilo Terminal 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -87,7 +96,7 @@ export function SignalTicker() {
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white font-medium">
               <Activity className="w-3.5 h-3.5 text-[#00d2ff]" />
-              Max Drawdown: <span className="font-bold">-4.1%</span>
+              Max Drawdown: <span className="font-bold">-18.4%</span>
             </div>
           </div>
         </div>
@@ -111,8 +120,8 @@ export function SignalTicker() {
       {/* ── GRÁFICO ── */}
       <div className="relative h-[350px] w-full pt-6">
         
-        {/* Etiquetas Flotantes (Cuentan la historia) */}
-        <div className="absolute top-[20%] left-[15%] z-10 hidden sm:block">
+        {/* Etiquetas Flotantes (Movidas a zonas seguras para no chocar con la línea) */}
+        <div className="absolute top-[12%] left-[10%] z-10 hidden sm:block">
           <div className="bg-[#151b23]/90 border border-white/10 rounded-lg p-3 shadow-xl backdrop-blur-sm">
             <p className="text-white font-bold text-xs mb-0.5">Phase 1: Accumulation</p>
             <p className="text-[#8b9bb4] text-[11px]">AI identifying highly profitable wallets.</p>
@@ -120,13 +129,18 @@ export function SignalTicker() {
           <div className="h-10 w-px bg-white/20 mx-auto mt-1" />
         </div>
 
-        <div className="absolute top-[50%] left-[45%] z-10 hidden sm:block">
+        <div className="absolute top-[25%] left-[38%] z-10 hidden sm:block">
           <div className="bg-neon/10 border border-neon/30 rounded-lg p-3 shadow-[0_0_20px_rgba(0,255,136,0.1)] backdrop-blur-sm">
             <p className="text-neon font-bold text-xs mb-0.5 flex items-center gap-1">
               <Activity className="w-3 h-3"/> Phase 2: Exponential Breakout
             </p>
             <p className="text-neon/70 text-[11px]">Compounding effect multiplying gains.</p>
           </div>
+        </div>
+
+        {/* Etiqueta Initial Balance (Movida más arriba para no chocar con la línea) */}
+        <div className="absolute bottom-12 left-10 text-[10px] text-neon font-bold uppercase tracking-wider hidden sm:block bg-[#0a0f16]/80 px-2 py-1 rounded backdrop-blur-sm">
+          Initial: $150
         </div>
 
         {/* Renderizado de Recharts */}
@@ -141,7 +155,6 @@ export function SignalTicker() {
             
             <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} opacity={0.5} />
             
-            {/* Eje X adaptado a 60 días */}
             <XAxis 
               dataKey="dayLabel" 
               stroke="#555" 
@@ -178,11 +191,6 @@ export function SignalTicker() {
             />
           </AreaChart>
         </ResponsiveContainer>
-
-        {/* Etiqueta Initial Balance */}
-        <div className="absolute bottom-6 left-6 text-[10px] text-neon font-bold uppercase tracking-wider hidden sm:block">
-          Initial: $150
-        </div>
       </div>
 
       {/* ── FOOTER STATS ── */}
