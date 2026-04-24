@@ -1,18 +1,54 @@
-import { X, Shield, Zap, Check, Star } from "lucide-react";
+import { useState } from "react";
+import { X, Shield, Zap, Check, Star, Loader2 } from "lucide-react";
 
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const STRIPE_PUBLISHABLE_KEY = "pk_test_51TNTEALQKsHvzszR9gZKZ7XZWlMaKEXaSdm6ucep108pFmpe8NgmiI3es0XHpqadPB05BtpEEgUa07feRbEiWaxu00uECdB1yD";
+const PRICE_ID = "price_1TNpFHLQKsHvzszRsKQ5Pk78";
+const API_URL = import.meta.env.VITE_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
+
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   if (!isOpen) return null;
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      // Create Stripe Checkout Session via our Flask API
+      const res = await fetch(`${API_URL}/api/create-checkout-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ price_id: PRICE_ID }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const data = await res.json();
+      
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL received");
+      }
+    } catch (e: any) {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
       <div className="relative w-full max-w-md rounded-3xl border border-neon/30 bg-card shadow-[0_0_80px_rgba(0,255,136,0.12)] p-8 overflow-hidden">
         
-        {/* Background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-neon/10 blur-3xl -z-10" />
         
         <button onClick={onClose} className="absolute right-5 top-5 text-muted-foreground hover:text-foreground transition p-1 rounded-lg hover:bg-muted">
@@ -47,17 +83,29 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
           </div>
         </div>
 
-        <a
-         href="https://whop.com/joined/polywhales/products/smart-money-vip-49/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-gradient-cta w-full block text-center rounded-xl font-display font-bold text-lg py-4 hover:scale-[1.02] transition-transform duration-300 mb-4 shadow-[0_0_25px_rgba(0,255,136,0.3)]"
+        {error && (
+          <div className="mb-4 rounded-xl bg-loss/10 border border-loss/30 px-4 py-3 text-sm text-loss text-center">
+            {error}
+          </div>
+        )}
+
+        <button
+          onClick={handleCheckout}
+          disabled={loading}
+          className="btn-gradient-cta w-full rounded-xl font-display font-bold text-lg py-4 hover:scale-[1.02] transition-transform duration-300 mb-4 shadow-[0_0_25px_rgba(0,255,136,0.3)] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
         >
-          Start Free Trial →
-        </a>
+          {loading ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Redirecting to payment...
+            </>
+          ) : (
+            "Start Free Trial →"
+          )}
+        </button>
 
         <p className="text-center text-xs text-muted-foreground mb-6 font-display">
-          Powered by Whop · Card, PayPal & crypto accepted
+          Powered by Stripe · Card, Apple Pay & Google Pay accepted
         </p>
 
         <div className="grid grid-cols-2 gap-2 mb-5">
