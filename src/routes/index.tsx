@@ -16,7 +16,7 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
 export const TG_FREE = "https://t.me/+BYejWJEm0SI4MmE0";
-export const VIP_LINK = "https://whop.com/PolyWhales";
+export const VIP_LINK = "https://whop.com/joined/polywhales/products/smart-money-vip-49/";
 
 export const Route = createFileRoute("/")(({
   component: Index,

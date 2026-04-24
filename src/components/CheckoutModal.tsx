@@ -48,7 +48,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
         </div>
 
         <a
-          href="https://whop.com/PolyWhales"
+         href="https://whop.com/joined/polywhales/products/smart-money-vip-49/"
           target="_blank"
           rel="noopener noreferrer"
           className="btn-gradient-cta w-full block text-center rounded-xl font-display font-bold text-lg py-4 hover:scale-[1.02] transition-transform duration-300 mb-4 shadow-[0_0_25px_rgba(0,255,136,0.3)]"
