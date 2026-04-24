@@ -627,42 +627,68 @@ function Pricing({ onUpgradeClick }: { onUpgradeClick: () => void }) {
 
 /* ── TRANSPARENCY ────────────────────────────────────── */
 function Transparency() {
-  const items = [
-    { win: true, date: "Nov 3, 2024", market: "Trump wins 2024?", desc: "US Presidential Election — resolved on AP call.", confidence: 91, roi: "+186%" },
-    { win: true, date: "Nov 28, 2024", market: "Fed cuts Dec 2024?", desc: "FOMC December rate decision — 25bps cut confirmed.", confidence: 76, roi: "+43%" },
-    { win: false, date: "Jan 12, 2025", market: "ETH flips BTC Q1?", desc: "Ethereum market cap surpassing Bitcoin before April 1.", confidence: 58, roi: "-100%" },
-  ];
+  const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const r = await fetch(`${API_URL}/api/signals`, { mode: "cors" });
+        if (!r.ok) return;
+        const d = await r.json();
+        const resolved = (d.signals || [])
+          .filter((s: any) => s.resultado !== "PENDIENTE")
+          .slice(0, 3);
+        if (resolved.length > 0) setItems(resolved);
+      } catch {}
+    };
+    f();
+  }, []);
+
+  if (!items.length) return null;
+
   return (
     <section className="py-20 sm:py-24">
       <div className="container mx-auto px-5 sm:px-8">
         <SectionHeading eyebrow="Transparency" title="We show the wins AND the losses." />
         <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-          {items.map(it => (
-            <div key={it.market} className={`rounded-2xl border p-6 bg-card/50 flex flex-col ${it.win ? "border-neon/30" : "border-loss/30"}`}>
-              <div className="flex items-center justify-between mb-4">
-                <span className={`font-display text-xs px-2.5 py-1 rounded-full font-bold ${it.win ? "bg-neon/15 text-neon border border-neon/30" : "bg-loss/15 text-loss border border-loss/30"}`}>
-                  {it.win ? "✅ WIN" : "❌ LOSS"}
-                </span>
-                <span className="font-display text-[11px] text-muted-foreground">{it.date}</span>
-              </div>
-              <div className="font-display font-bold mb-2">{it.market}</div>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-5 flex-1">{it.desc}</p>
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-display text-[10px] uppercase tracking-widest text-muted-foreground">Confidence</span>
-                  <span className="font-display text-xs text-amber-score font-bold">{it.confidence}/100</span>
+          {items.map((s: any, i: number) => {
+            const win = s.resultado === "ACIERTO";
+            const score = s.score || 0;
+            return (
+              <div key={i} className={`rounded-2xl border p-6 bg-card/50 flex flex-col ${win ? "border-neon/30" : "border-loss/30"}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <span className={`font-display text-xs px-2.5 py-1 rounded-full font-bold ${win ? "bg-neon/15 text-neon border border-neon/30" : "bg-loss/15 text-loss border border-loss/30"}`}>
+                    {win ? "✅ WIN" : "❌ LOSS"}
+                  </span>
+                  <span className="font-display text-[11px] text-muted-foreground">{s.fecha}</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-muted/60 overflow-hidden">
-                  <div className={`h-full rounded-full ${it.confidence >= 80 ? "bg-neon" : it.confidence >= 70 ? "bg-amber-score" : "bg-loss"}`}
-                    style={{ width: `${it.confidence}%` }} />
+                <div className="font-display font-bold mb-2">{s.mercado?.slice(0, 40)}{s.mercado?.length > 40 ? "..." : ""}</div>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-5 flex-1">
+                  {s.apodo} · {s.posicion} · ${s.usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })} USD
+                </p>
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-display text-[10px] uppercase tracking-widest text-muted-foreground">Confidence</span>
+                    <span className="font-display text-xs text-amber-score font-bold">{score}/100</span>
+                  </div>
+                  <div className="h-1.5 w-full rounded-full bg-muted/60 overflow-hidden">
+                    <div className={`h-full rounded-full ${score >= 80 ? "bg-neon" : score >= 60 ? "bg-amber-score" : "bg-loss"}`}
+                      style={{ width: `${score}%` }} />
+                  </div>
+                </div>
+                <div className="pt-3 border-t border-border/60">
+                  <div className={`font-display text-3xl font-bold ${win ? "text-neon" : "text-loss"}`}>
+                    {win ? "✅ WIN" : "❌ LOSS"}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-electric hover:underline">
+                      View market →
+                    </a>
+                  </div>
                 </div>
               </div>
-              <div className="pt-3 border-t border-border/60">
-                <div className={`font-display text-3xl font-bold ${it.win ? "text-neon" : "text-loss"}`}>{it.roi}</div>
-                <div className="text-xs text-muted-foreground mt-0.5">ROI on signal</div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <p className="text-center text-sm text-muted-foreground italic mt-6 max-w-xl mx-auto opacity-70">
           Low-confidence signals sometimes lose. That's exactly why the Confidence Score exists — skip the noise, take the best.
