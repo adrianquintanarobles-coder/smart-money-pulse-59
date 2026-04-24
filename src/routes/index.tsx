@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { LiveBadge } from "@/components/LiveBadge";
 import { PhoneMockup } from "@/components/PhoneMockup";
@@ -16,7 +16,7 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
 export const TG_FREE = "https://t.me/+BYejWJEm0SI4MmE0";
-export const VIP_LINK = "https://whop.com/joined/polywhales/products/smart-money-vip-49/";
+export const VIP_LINK = "https://whop.com/PolyWhales";
 
 export const Route = createFileRoute("/")(({
   component: Index,
@@ -748,8 +748,8 @@ function Footer() {
             </div>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <a href="/terms" className="hover:text-foreground transition font-display">Terms</a>
-            <a href="/privacy" className="hover:text-foreground transition font-display">Privacy</a>
+            <a href="#" className="hover:text-foreground transition font-display">Terms</a>
+            <a href="#" className="hover:text-foreground transition font-display">Privacy</a>
             <a href={TG_FREE} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition font-display">Telegram</a>
             <a href={VIP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-neon transition font-display text-neon/80">VIP Access</a>
           </div>
