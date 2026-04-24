@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, Shield, Zap, Star } from "lucide-react";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -7,123 +6,70 @@ interface CheckoutModalProps {
 }
 
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleCheckout = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      // Crear sesión de Stripe en el backend
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          productId: "prod_UMYL22pTpPyxNF",
-          priceAmount: 1500, // $15 en centavos
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create checkout session");
-      }
-
-      const { clientSecret } = await response.json();
-
-      // Redirigir a Stripe Checkout (en la misma pestaña o nueva según prefieras)
-      if (clientSecret) {
-        // Opción: abrir en popup/modal
-        window.location.href = clientSecret;
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Payment failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-md rounded-2xl border border-neon/30 bg-card p-8">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
-        >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-md rounded-2xl border border-neon/30 bg-card shadow-[0_0_60px_rgba(0,255,136,0.1)] p-8">
+        <button onClick={onClose} className="absolute right-4 top-4 text-muted-foreground hover:text-foreground transition">
           <X className="h-5 w-5" />
         </button>
 
-        <h2 className="font-display text-2xl font-bold text-foreground">
-          🐋 Upgrade to VIP
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Get whale signals, AI analysis, and breaking news context.
-        </p>
-
-        <div className="mt-6 rounded-lg border border-neon/20 bg-neon/5 p-4">
-          <div className="flex items-baseline justify-between">
-            <span className="text-sm text-muted-foreground">Price per month</span>
-            <span className="text-3xl font-bold text-neon">$15</span>
-          </div>
-          <p className="mt-2 text-xs text-amber-score">
-            🔥 Launch price — cancel anytime
-          </p>
+        <div className="text-center mb-6">
+          <div className="text-3xl mb-2">🐋</div>
+          <h2 className="font-display text-2xl font-bold text-foreground">Upgrade to VIP</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Instant access via Telegram</p>
         </div>
 
-        <form onSubmit={handleCheckout} className="mt-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-foreground">
-              Email
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="mt-2 w-full rounded-lg border border-border bg-background/50 px-4 py-2.5 text-foreground placeholder-muted-foreground focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon"
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-lg border border-loss/30 bg-loss/10 p-3 text-sm text-loss">
-              {error}
+        <div className="rounded-xl border border-neon/20 bg-neon/5 p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className="font-display text-4xl font-bold text-foreground">$15</span>
+                <span className="text-muted-foreground text-sm">/ month</span>
+              </div>
+              <p className="text-xs text-amber-score mt-1">🔥 Launch price — cancel anytime</p>
             </div>
-          )}
+            <div className="text-right">
+              <div className="text-xs text-muted-foreground line-through">$35/mo</div>
+              <div className="text-xs font-bold text-neon bg-neon/10 px-2 py-0.5 rounded mt-1">SAVE 57%</div>
+            </div>
+          </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading || !email}
-            className="btn-gradient-cta w-full rounded-lg py-3 font-display font-semibold disabled:opacity-50"
-          >
-            {loading ? "Processing..." : "Pay $15/month →"}
-          </button>
+        <a
+          href="https://whop.com/PolyWhales"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-gradient-cta w-full block text-center rounded-xl font-display font-bold text-lg py-4 hover:scale-[1.02] transition-transform duration-300 mb-4 shadow-[0_0_20px_rgba(0,255,136,0.3)]"
+        >
+          Pay & Get Instant Access →
+        </a>
 
-          <p className="text-center text-xs text-muted-foreground">
-            Secure payment powered by Stripe
-          </p>
-        </form>
+        <p className="text-center text-xs text-muted-foreground mb-6">
+          Powered by Whop · Tarjeta, PayPal & crypto · Acceso instantáneo
+        </p>
 
-        <div className="mt-6 space-y-2 border-t border-border pt-4">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="text-neon">✓</span> Whale signals $500+
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="text-neon">✓</span> Confidence Score 0–100
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="text-neon">✓</span> Claude AI Analysis
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="text-neon">✓</span> Breaking news context
-          </div>
+        <div className="space-y-2.5 border-t border-border pt-5">
+          {[
+            "🐋 Whale signals $500+ (verified wallets)",
+            "⚡ Confidence Score 0–100",
+            "🧠 Claude AI Reasoning Reports",
+            "🏛️ Institutional Consensus Alerts",
+            "🔄 Contrarian Whale Alerts",
+            "📊 /resultados Full Audit Record",
+            "🌙 Nightly Summary & Weekly Ranking",
+          ].map((f, i) => (
+            <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="text-neon">✓</span> {f}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-5 flex justify-center items-center gap-4 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1"><Shield className="w-3 h-3 text-neon" /> Secure</span>
+          <span className="flex items-center gap-1"><Zap className="w-3 h-3 text-electric" /> Instant access</span>
+          <span className="flex items-center gap-1"><X className="w-3 h-3" /> Cancel anytime</span>
         </div>
       </div>
     </div>
