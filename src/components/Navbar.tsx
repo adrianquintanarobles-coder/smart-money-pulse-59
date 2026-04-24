@@ -36,7 +36,7 @@ export function Navbar({ onUpgradeClick }: { onUpgradeClick: () => void }) {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-neon" />
             </span>
             <span className="font-display text-sm sm:text-base font-bold tracking-tight text-foreground">
-              SM Tracker
+              PolyWhales
             </span>
           </a>
 
