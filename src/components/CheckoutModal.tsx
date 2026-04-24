@@ -6,8 +6,7 @@ interface CheckoutModalProps {
   onClose: () => void;
 }
 
-const STRIPE_PUBLISHABLE_KEY = "pk_test_51TNTEALQKsHvzszR9gZKZ7XZWlMaKEXaSdm6ucep108pFmpe8NgmiI3es0XHpqadPB05BtpEEgUa07feRbEiWaxu00uECdB1yD";
-const PRICE_ID = "price_1TNpFHLQKsHvzszRsKQ5Pk78";
+const STRIPE_PUBLISHABLE_KEY = "pk_live_51TNTDuLbIeIY3uS5XcHzN8fbv7XAYGorcEDONGpCF9QruB6aZkMkst5fdQU9MdAOzhyLWvarPRTQSMrG6IOoII1I00Eg4Cnc4H";
 const API_URL = import.meta.env.VITE_API_URL || "https://polymarket-bot-production-5124.up.railway.app";
 
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
