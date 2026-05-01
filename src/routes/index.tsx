@@ -616,7 +616,7 @@ function Pricing({ onUpgradeClick }: { onUpgradeClick: () => void }) {
         </div>
 
         <div className="mt-10 flex flex-wrap justify-center gap-6 text-xs text-muted-foreground font-display">
-          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-neon" /> Secure payment via Whop</span>
+          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-neon" /> Secure payment via Stripe</span>
           <span className="flex items-center gap-1.5"><X className="w-4 h-4" /> Cancel anytime, no lock-in</span>
           <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-electric" /> Instant Telegram access</span>
         </div>
@@ -748,10 +748,10 @@ function Footer() {
             </div>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition font-display">Terms</a>
-            <a href="#" className="hover:text-foreground transition font-display">Privacy</a>
+           <Link to="/terms" className="hover:text-foreground transition font-display">Terms</Link>
+           <Link to="/privacy" className="hover:text-foreground transition font-display">Privacy</Link>
             <a href={TG_FREE} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition font-display">Telegram</a>
-            <a href={VIP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-neon transition font-display text-neon/80">VIP Access</a>
+            <a href="#pricing" className="hover:text-neon transition font-display text-neon/80">VIP Access</a>
           </div>
         </div>
         <p className="text-xs text-muted-foreground opacity-60 max-w-2xl">
