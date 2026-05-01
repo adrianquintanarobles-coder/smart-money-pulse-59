@@ -55,8 +55,7 @@ export function FAQ() {
                 </AccordionPrimitive.Trigger>
               </AccordionPrimitive.Header>
               <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                <div className="px-6 pb-6 -mt-2 font-body text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  {item.a}
+                <div className="px-6 pb-6 pt-2 font-body text-sm sm:text-base text-muted-foreground leading-relaxed">                  {item.a}
                 </div>
               </AccordionPrimitive.Content>
             </AccordionPrimitive.Item>
